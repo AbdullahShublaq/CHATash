@@ -1,38 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-    {{--<div class="flex items-center">--}}
-    {{--<div class="md:w-1/2 md:mx-auto">--}}
-
-    {{--@if (session('status'))--}}
-    {{--<div class="text-sm border border-t-8 rounded text-green-700 border-green-600 bg-green-100 px-3 py-4 mb-4" role="alert">--}}
-    {{--{{ session('status') }}--}}
-    {{--</div>--}}
-    {{--@endif--}}
-
-    {{--<div class="flex flex-col break-words bg-white border border-2 rounded shadow-md">--}}
-
-    {{--<div class="font-semibold bg-gray-200 text-gray-700 py-3 px-6 mb-0">--}}
-    {{--Dashboard--}}
-    {{--</div>--}}
-
-    {{--<div class="w-full p-6">--}}
-    {{--<p class="text-gray-700">--}}
-    {{--You are logged in!--}}
-    {{--</p>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    <div class="flex content-center flex-wrap">
-        <div class="flex w-full justify-center mt-4 mb-8">
+    <div class="flex flex-wrap content-center items-center">
+        <div class="flex w-full justify-center mt-8 mb-8">
             <h1 class="text-center text-blue-900 text-5xl font-semibold font-mono">Welcome,
                 <span class="font-normal text-gray-500">{{auth()->user()->name}}</span>
             </h1>
         </div>
         <div class="flex flex-wrap w-full justify-center">
             <div class="flex m-6">
-                <a href="">
+                <a href="/public">
                     <div class="flex flex-col bg-white rounded rounded-lg overflow-hidden shadow-xl border hover:border-blue-900 p-12 items-center">
                         <svg viewBox="0 0 16 16" color="#2a4365" class="w-32 h-32 bi bi-globe opacity-50" fill="currentColor"
                              xmlns="http://www.w3.org/2000/svg">
@@ -41,15 +18,15 @@
                             </path>
                         </svg>
                         <h1 class="text-center text-blue-900 font-mono text-3xl p-2 mt-6">Public Room</h1>
-                        <p class="text-sm text-gray-500 font-sans">
-                            shat with people from the worlds.
+                        <p class="text-sm text-gray-500 font-sans italic">
+                            Chat to people around the worlds.
                         </p>
                     </div>
                 </a>
             </div>
             <div class="flex m-6">
-                <a href="">
-                    <div class="flex flex-col bg-white rounded rounded-lg overflow-hidden shadow-xl border hover:border-blue-900 p-12 items-center">
+                <a href="/private">
+                     <div class="flex flex-col bg-white rounded rounded-lg overflow-hidden shadow-xl border hover:border-blue-900 p-12 items-center">
                         <svg viewBox="0 0 16 16" color="#2a4365" class="w-32 h-32 bi bi-globe opacity-50" fill="currentColor"
                              xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
@@ -57,8 +34,8 @@
                             </path>
                         </svg>
                         <h1 class="text-center text-blue-900 font-mono text-3xl p-2 mt-6">Private Room</h1>
-                        <p class="text-sm text-gray-500 font-sans">
-                            shat with people from the worlds.
+                        <p class="text-sm text-gray-500 font-sans italic">
+                            Chat to your friends only.
                         </p>
                     </div>
                 </a>

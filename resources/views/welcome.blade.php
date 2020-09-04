@@ -29,7 +29,7 @@
                     </svg>
                 </h1>
                 <p class="mb-4 text-gray-500 text-center font-sans italic">
-                    Enjoy the chatting with your friends.
+                    Enjoy to chatting with your friends.
                 </p>
                 <ul class="list-reset">
                     <li class="flex justify-center">

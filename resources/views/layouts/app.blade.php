@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,7 +17,7 @@
 </head>
 <body class="bg-gray-100 h-screen antialiased leading-none">
 <div id="app">
-    <nav id="nav" class="bg-blue-900 shadow mb-8 py-3">
+    <nav id="nav" class="bg-blue-900 shadow py-3">
         <div class="container mx-auto px-6 md:px-0">
             <div class="flex items-center justify-center">
                 <div class="mr-6">
@@ -45,12 +45,13 @@
                                href="{{ route('register') }}">{{ __('Register') }}</a>
                         @endif
                     @else
-                        <dropdown align="right" width="">
-                            <div class="flex justify-end">
+                        <div class="flex justify-end">
+                            <dropdown align="right" width="">
                                 <template v-slot:trigger>
                                     <div class="flex justify-end items-center">
                                         <img class="w-8 h-8 rounded-full"
-                                             src="https://avatars.dicebear.com/v2/gridy/{{Auth::user()->email}}.svg" alt="avatar">
+                                             src="https://avatars.dicebear.com/v2/gridy/{{crypt(Auth::user()->email,'st')}}.svg"
+                                             alt="avatar">
                                         <span class="text-gray-300 text-sm pr-4 ml-2">
                                         {{ Auth::user()->name }}
                                         </span>
@@ -58,14 +59,14 @@
                                 </template>
 
                                 <a href="{{ route('logout') }}"
-                                   class="no-underline hover:underline text-gray-300 text-sm p-3"
+                                   class="block text-default no-underline text-sm leading-loose px-4 hover:bg-gray-300"
                                    onclick="event.preventDefault();
                                         document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                                     {{ csrf_field() }}
                                 </form>
-                            </div>
-                        </dropdown>
+                            </dropdown>
+                        </div>
                     @endguest
                 </div>
             </div>
@@ -75,4 +76,7 @@
     @yield('content')
 </div>
 </body>
+
+@stack('script')
+
 </html>
