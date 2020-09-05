@@ -21,8 +21,7 @@ window.Vue = require('vue');
 
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('dropdown', require('./components/Dropdown.vue').default);
-Vue.component('publicRoom_current', require('./components/publicRoom/Current.vue').default);
-Vue.component('publicRoom_messages', require('./components/publicRoom/Messages.vue').default);
+Vue.component('publicroom', require('./components/publicRoom.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -18,7 +18,10 @@ Route::get('/', function () {
 });
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/public', function () {
-   return view('rooms.public');
+Route::group(['middleware' => 'auth'] ,function (){
+    Route::get('/home', 'HomeController@index')->name('home');
+
+    Route::get('/public/messages', 'PublicRoomController@messages');
+    Route::resource('/public', 'PublicRoomController')->only('index', 'store');
 });
+

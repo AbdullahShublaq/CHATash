@@ -36,4 +36,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected $appends = ['avatar'];
+    public function getAvatarAttribute() {
+        return "https://avatars.dicebear.com/v2/gridy/".crypt($this->email, 'st').".svg";
+    }
 }
