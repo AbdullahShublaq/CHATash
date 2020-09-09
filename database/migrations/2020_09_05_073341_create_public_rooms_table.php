@@ -13,7 +13,7 @@ class CreatePublicRoomsTable extends Migration
      */
     public function up()
     {
-        Schema::create('public_rooms', function (Blueprint $table) {
+        Schema::create('public_room_messages', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->text('message');
@@ -30,6 +30,6 @@ class CreatePublicRoomsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('public_rooms');
+        Schema::dropIfExists('public_room_messages');
     }
 }

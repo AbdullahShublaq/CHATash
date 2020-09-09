@@ -2,20 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PublicRoomMessageCreated;
+use App\Http\Resources\MessageResource;
 use App\PublicRoomMessage;
 use Illuminate\Http\Request;
 
-class PublicRoomController extends Controller
+class PublicRoomMessagesController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function index()
     {
         //
-        return view('rooms.public');
+        $result = [];
+        $data = PublicRoomMessage::with('user')->get();
+        foreach ($data as $row) {
+            array_push($result, MessageResource::make($row));
+        }
+
+        return $result;
     }
 
     /**
@@ -31,21 +40,32 @@ class PublicRoomController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         //
+        $data = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'message' => 'required|string'
+        ]);
+
+        $message = PublicRoomMessage::create([
+            'user_id' => $data['user_id'],
+            'message' => $data['message']
+        ]);
+
+        event(new PublicRoomMessageCreated(MessageResource::make($message)));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\PublicRoomMessage $publicRoom
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(PublicRoomMessage $publicRoom)
+    public function show($id)
     {
         //
     }
@@ -53,10 +73,10 @@ class PublicRoomController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\PublicRoomMessage $publicRoom
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(PublicRoomMessage $publicRoom)
+    public function edit($id)
     {
         //
     }
@@ -64,11 +84,11 @@ class PublicRoomController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\PublicRoomMessage $publicRoom
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, PublicRoomMessage $publicRoom)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -76,10 +96,10 @@ class PublicRoomController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\PublicRoomMessage $publicRoom
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(PublicRoomMessage $publicRoom)
+    public function destroy($id)
     {
         //
     }

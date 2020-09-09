@@ -161,7 +161,7 @@
                 if (this.newMessage != null && this.newMessage != '') {
                     this.activePeer = false;
 
-                    axios.post('/public', {
+                    axios.post('/public/messages', {
                         user_id: this.currentUser.id,
                         message: this.newMessage
                     });

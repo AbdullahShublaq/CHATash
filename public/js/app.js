@@ -2125,7 +2125,7 @@ __webpack_require__.r(__webpack_exports__);
     addMessage: function addMessage() {
       if (this.newMessage != null && this.newMessage != '') {
         this.activePeer = false;
-        axios.post('/public', {
+        axios.post('/public/messages', {
           user_id: this.currentUser.id,
           message: this.newMessage
         });
