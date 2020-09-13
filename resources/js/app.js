@@ -8,6 +8,9 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+import VModal from 'vue-js-modal'
+Vue.use(VModal);
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -22,6 +25,7 @@ window.Vue = require('vue');
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('dropdown', require('./components/Dropdown.vue').default);
 Vue.component('publicroom', require('./components/publicRoom.vue').default);
+Vue.component('new-room-modal', require('./components/NewRoomModal.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

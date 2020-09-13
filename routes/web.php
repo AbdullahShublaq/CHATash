@@ -21,8 +21,9 @@ Auth::routes();
 Route::group(['middleware' => 'auth'] ,function (){
     Route::get('/home', 'HomeController@index')->name('home');
 
-    Route::resource('/public/messages', 'PublicRoomMessagesController')->only('index', 'store');
     Route::resource('/public', 'PublicRoomController')->only('index');
+    Route::resource('/public/messages', 'PublicRoomMessagesController')->only('index', 'store');
 
+    Route::resource('/private', 'PrivateRoomController')->only('index', 'show', 'store');
 });
 

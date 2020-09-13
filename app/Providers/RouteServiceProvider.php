@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\PrivateRoom;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,10 @@ class RouteServiceProvider extends ServiceProvider
         //
 
         parent::boot();
+
+        Route::bind('private', function ($value) {
+            return PrivateRoom::where('slug', $value)->firstOrFail();
+        });
     }
 
     /**

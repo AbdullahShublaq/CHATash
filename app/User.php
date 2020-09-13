@@ -41,4 +41,17 @@ class User extends Authenticatable
     public function getAvatarAttribute() {
         return "https://avatars.dicebear.com/v2/gridy/".crypt($this->email, 'st').".svg";
     }
+
+    public function rooms()
+    {
+        return $this->hasMany(PrivateRoom::class, 'owner_id');
+    }
+
+    public function accessiblePrivateRooms()
+    {
+        return PrivateRoom::where('owner_id', $this->id)
+            ->orWhereHas('participants', function ($query) {
+                $query->where('user_id', $this->id);
+            })->get();
+    }
 }
