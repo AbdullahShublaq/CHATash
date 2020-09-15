@@ -49,6 +49,10 @@ class PrivateRoomController extends Controller
 //            'slug' => Str::slug($data['name'])
         ]);
 
+        $room->participants()->create([
+            'user_id' => auth()->id()
+        ]);
+
         if ($request->wantsJson()) {
             return ['message' => $room->path()];
         }
@@ -61,10 +65,12 @@ class PrivateRoomController extends Controller
      *
      * @param PrivateRoom $privateRoom
      * @return void
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(PrivateRoom $privateRoom)
     {
         //
+        $this->authorize('view', $privateRoom);
     }
 
     /**

@@ -10,17 +10,32 @@ class PrivateRoom extends Model
     use Sluggable;
     //
     protected $fillable = ['name', 'slug'];
+    protected $appends = ['path', 'participantsCount'];
+
+    public function getPathAttribute(){
+        return $this->path();
+    }
+    public function getParticipantsCountAttribute(){
+        return $this->participants()->count();
+    }
 
     public function path()
     {
         return "/private/{$this->slug}";
     }
 
-    public function participants() {
+    public function owner()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function participants()
+    {
         return $this->hasMany(PrivateRoomParticipant::class);
     }
 
-    public function messages(){
+    public function messages()
+    {
         return $this->hasMany(PrivateRoomMessage::class);
     }
 

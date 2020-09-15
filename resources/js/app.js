@@ -24,8 +24,10 @@ Vue.use(VModal);
 
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('dropdown', require('./components/Dropdown.vue').default);
-Vue.component('publicroom', require('./components/publicRoom.vue').default);
+Vue.component('public-room', require('./components/publicRoom.vue').default);
 Vue.component('new-room-modal', require('./components/NewRoomModal.vue').default);
+Vue.component('private-room', require('./components/privateRoom.vue').default);
+Vue.component('private-room-card', require('./components/privateRoomCard.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

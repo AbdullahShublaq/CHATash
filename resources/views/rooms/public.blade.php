@@ -2,6 +2,6 @@
 
 @section('content')
     <div id="body">
-        <publicroom></publicroom>
+        <public-room></public-room>
     </div>
 @endsection
