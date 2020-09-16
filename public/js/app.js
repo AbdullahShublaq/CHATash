@@ -2179,7 +2179,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['room'],
   data: function data() {
     return {
       messages: [],
@@ -2188,27 +2198,42 @@ __webpack_require__.r(__webpack_exports__);
       activePeer: false,
       typingTimer: false,
       participants: [],
-      expandCurrent: false
+      expandCurrent: false,
+      newParticipant: ''
     };
   },
   computed: {
     channel: function channel() {
-      return window.Echo.join('messages');
+      return window.Echo.join('messages.' + this.room.id);
     }
   },
   created: function created() {
     var _this = this;
 
-    axios.get('/public/messages').then(function (response) {
+    this.participants = this.room.participants;
+    axios.get('/private/messages', {
+      params: {
+        private_room_id: this.room.id
+      }
+    }).then(function (response) {
       return _this.messages = response.data;
     });
     this.channel.here(function (users) {
-      _this.participants = users;
+      var participants = _this.participants;
+      $.each(users, function (key, value) {
+        participants.find(function (x) {
+          return x.id === value.user.id;
+        }).active = true;
+      });
     }).joining(function (user) {
-      _this.participants.push(user);
+      _this.participants.find(function (x) {
+        return x.id === user.user.id;
+      }).active = true;
     }).leaving(function (user) {
-      _this.participants.splice(_this.participants.indexOf(user), 1);
-    }).listen('PublicRoomMessageCreated', function (_ref) {
+      _this.participants.find(function (x) {
+        return x.id === user.user.id;
+      }).active = false;
+    }).listen('PrivateRoomMessageCreated', function (_ref) {
       var message = _ref.message;
 
       _this.messages.push(message);
@@ -2220,14 +2245,28 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     addMessage: function addMessage() {
-      if (this.newMessage != null && this.newMessage != '') {
+      if (this.newMessage != null && this.newMessage.trim() != '') {
         this.activePeer = false;
-        axios.post('/public/messages', {
+        axios.post('/private/messages', {
+          private_room_id: this.room.id,
           user_id: this.currentUser.id,
           message: this.newMessage
         });
         this.newMessage = '';
-        this.scrollToEnd();
+      }
+    },
+    addParticipant: function addParticipant() {
+      var _this2 = this;
+
+      if (this.newParticipant != null && this.newParticipant.trim() != '') {
+        axios.post('/private/addParticipant', {
+          private_room_id: this.room.id,
+          email: this.newParticipant
+        }).then(function (response) {
+          return _this2.participants.push(response.data);
+        });
+        this.participants.push();
+        this.newParticipant = '';
       }
     },
     tagPeers: function tagPeers() {
@@ -2236,12 +2275,12 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     flashActivePeer: function flashActivePeer(e) {
-      var _this2 = this;
+      var _this3 = this;
 
       this.activePeer = e;
       if (this.typingTimer) clearTimeout(this.typingTimer);
       this.typingTimer = setTimeout(function () {
-        return _this2.activePeer = false;
+        return _this3.activePeer = false;
       }, 2500);
     }
   }
@@ -2308,7 +2347,7 @@ __webpack_require__.r(__webpack_exports__);
       _this.activePeerCount++;
     }).leaving(function (user) {
       _this.activePeerCount--;
-    }).listen('PrivateRoomMessageCreated');
+    });
   }
 });
 
@@ -2478,14 +2517,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     addMessage: function addMessage() {
-      if (this.newMessage != null && this.newMessage != '') {
+      if (this.newMessage != null && this.newMessage.trim() != '') {
         this.activePeer = false;
         axios.post('/public/messages', {
           user_id: this.currentUser.id,
           message: this.newMessage
         });
         this.newMessage = '';
-        this.scrollToEnd();
       }
     },
     tagPeers: function tagPeers() {
@@ -45158,13 +45196,13 @@ var render = function() {
                     { staticClass: "text-xl font-semibold font-mono ml-2" },
                     [
                       _vm._v(
-                        "\n                        Current\n                        "
+                        "\n                        Friends\n                        "
                       ),
                       _c("span", {
                         staticClass:
                           "rounded-full p-2 text-xs bg-blue-400 text-white",
                         domProps: {
-                          textContent: _vm._s(_vm.participants.length)
+                          textContent: _vm._s(this.room.participants.length)
                         }
                       })
                     ]
@@ -45232,9 +45270,74 @@ var render = function() {
               "div",
               {
                 staticClass:
+                  "flex rounded-lg shadow-lg items-center bg-white p-2 text-black mb-2"
+              },
+              [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.newParticipant,
+                      expression: "newParticipant"
+                    }
+                  ],
+                  staticClass:
+                    "rounded border border-gray-400 w-full px-2 py-1",
+                  attrs: {
+                    type: "text",
+                    placeholder: "Add new friend by email..."
+                  },
+                  domProps: { value: _vm.newParticipant },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.newParticipant = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "rounded bg-blue-400 text-white p-1 ml-2",
+                    on: { click: _vm.addParticipant }
+                  },
+                  [
+                    _c(
+                      "svg",
+                      {
+                        staticClass: "w-5 h-5 bi bi-globe",
+                        attrs: {
+                          viewBox: "0 0 16 16",
+                          fill: "currentColor",
+                          xmlns: "http://www.w3.org/2000/svg"
+                        }
+                      },
+                      [
+                        _c("path", {
+                          attrs: {
+                            "fill-rule": "evenodd",
+                            d:
+                              "M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
+                          }
+                        })
+                      ]
+                    )
+                  ]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass:
                   "flex flex-col rounded-lg shadow-lg items-start bg-white p-2 text-blue-500"
               },
-              _vm._l(_vm.participants, function(participant) {
+              _vm._l(this.participants, function(participant) {
                 return _c(
                   "div",
                   {
@@ -45244,12 +45347,17 @@ var render = function() {
                   [
                     _c("img", {
                       staticClass: "w-10 h-10 rounded-full",
-                      attrs: { src: participant.user.avatar, alt: "avatar" }
+                      attrs: { src: participant.avatar, alt: "avatar" }
+                    }),
+                    _vm._v(" "),
+                    _c("span", {
+                      staticClass: "rounded-full w-3 h-3",
+                      class: participant.active ? "bg-green-400" : "bg-red-400"
                     }),
                     _vm._v(" "),
                     _c("span", {
                       staticClass: "text-lg pr-4 ml-2 break-words",
-                      domProps: { textContent: _vm._s(participant.user.name) }
+                      domProps: { textContent: _vm._s(participant.name) }
                     })
                   ]
                 )
@@ -45286,15 +45394,16 @@ var render = function() {
                     attrs: {
                       "fill-rule": "evenodd",
                       d:
-                        "M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4H2.255a7.025 7.025 0 0 1 3.072-2.472 6.7 6.7 0 0 0-.597.933c-.247.464-.462.98-.64 1.539zm-.582 3.5h-2.49c.062-.89.291-1.733.656-2.5H3.82a13.652 13.652 0 0 0-.312 2.5zM4.847 5H7.5v2.5H4.51A12.5 12.5 0 0 1 4.846 5zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5H8.5zM4.51 8.5H7.5V11H4.847a12.5 12.5 0 0 1-.338-2.5zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5H8.5zM5.145 12H7.5v2.923c-.67-.204-1.335-.82-1.887-1.855A7.97 7.97 0 0 1 5.145 12zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472zM3.82 11H1.674a6.958 6.958 0 0 1-.656-2.5h2.49c.03.877.138 1.718.312 2.5zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933zM8.5 12h2.355a7.967 7.967 0 0 1-.468 1.068c-.552 1.035-1.218 1.65-1.887 1.855V12zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5zm2.802-3.5h-2.49A13.65 13.65 0 0 0 12.18 5h2.146c.365.767.594 1.61.656 2.5zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7.024 7.024 0 0 0-3.072-2.472c.218.284.418.598.597.933zM10.855 4H8.5V1.077c.67.204 1.335.82 1.887 1.855.173.324.33.682.468 1.068z"
+                        "M11.5 8h-7a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1zm-7-1a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-7zm0-3a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"
                     }
                   })
                 ]
               ),
               _vm._v(" "),
-              _c("h1", { staticClass: "text-xl text-white font-mono ml-2" }, [
-                _vm._v("Public Room")
-              ])
+              _c("h1", {
+                staticClass: "text-xl text-white font-mono ml-2",
+                domProps: { textContent: _vm._s(this.room.name) }
+              })
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "flex items-center" }, [

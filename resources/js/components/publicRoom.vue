@@ -158,7 +158,7 @@
 
         methods: {
             addMessage() {
-                if (this.newMessage != null && this.newMessage != '') {
+                if (this.newMessage != null && this.newMessage.trim() != '') {
                     this.activePeer = false;
 
                     axios.post('/public/messages', {
@@ -167,7 +167,6 @@
                     });
 
                     this.newMessage = '';
-                    this.scrollToEnd();
                 }
 
             },

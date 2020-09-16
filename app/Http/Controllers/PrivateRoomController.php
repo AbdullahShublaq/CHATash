@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\PrivateRoom;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -49,9 +50,7 @@ class PrivateRoomController extends Controller
 //            'slug' => Str::slug($data['name'])
         ]);
 
-        $room->participants()->create([
-            'user_id' => auth()->id()
-        ]);
+        $room->participants()->attach(auth()->user());
 
         if ($request->wantsJson()) {
             return ['message' => $room->path()];
@@ -60,17 +59,32 @@ class PrivateRoomController extends Controller
         return redirect($room->path());
     }
 
+    public function addParticipant(Request $request)
+    {
+        $data = $request->validate([
+            'private_room_id' => 'required|exists:private_rooms,id',
+            'email' => 'required|string|email',
+        ]);
+
+        $user = User::where('email', $data['email'])->first();
+        $room = PrivateRoom::where('id', $data['private_room_id'])->first();
+        $room->participants()->attach($user);
+
+        return $user;
+    }
+
     /**
      * Display the specified resource.
      *
      * @param PrivateRoom $privateRoom
-     * @return void
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(PrivateRoom $privateRoom)
     {
         //
         $this->authorize('view', $privateRoom);
+        return view('rooms.private.show', compact('privateRoom'));
     }
 
     /**

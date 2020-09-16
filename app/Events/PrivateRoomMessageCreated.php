@@ -34,6 +34,6 @@ class PrivateRoomMessageCreated implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PresenceChannel('messages.', $this->message->private_room_id);
+        return new PresenceChannel('messages.'. $this->message->private_room_id);
     }
 }

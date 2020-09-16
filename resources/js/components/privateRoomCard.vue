@@ -52,8 +52,7 @@
                 })
                 .leaving(user => {
                     this.activePeerCount--;
-                })
-                .listen('PrivateRoomMessageCreated');
+                });
         },
 
     }

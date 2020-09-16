@@ -24,7 +24,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/public', 'PublicRoomController')->only('index');
     Route::resource('/public/messages', 'PublicRoomMessagesController')->only('index', 'store');
 
-    Route::resource('/private', 'PrivateRoomController')
-        ->only('index', 'show', 'store');
+    Route::resource('/private/messages', 'PrivateRoomMessagesController')->only('index', 'store');
+    Route::resource('/private', 'PrivateRoomController')->only('index', 'show', 'store');
+    Route::post('/private/addParticipant', 'PrivateRoomController@addParticipant');
 });
 
