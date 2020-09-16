@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3c74e221-e277-481d-8a31-a9c6318729bb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Events/PrivateRoomMessageCreated.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Events/PrivateRoomMessageCreated.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/PrivateRoomController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/PrivateRoomController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/PrivateRoom.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/PrivateRoom.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/User.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/privateRoom.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/privateRoom.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/privateRoomCard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/privateRoomCard.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/publicRoom.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/publicRoom.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/rooms/private/show.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/rooms/private/show.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
-    </list>
+    <list default="true" id="3c74e221-e277-481d-8a31-a9c6318729bb" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,8 +25,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/resources/js/components/privateRoomCard.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="483">
-              <caret line="54" column="19" selection-start-line="54" selection-start-column="19" selection-end-line="54" selection-end-column="19" />
+            <state relative-caret-position="1219">
+              <caret line="53" column="43" lean-forward="true" selection-start-line="53" selection-start-column="43" selection-end-line="53" selection-end-column="43" />
             </state>
           </provider>
         </entry>
@@ -262,7 +250,7 @@
       <path value="$PROJECT_DIR$/vendor/laravelcollective/errors" />
     </include_path>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-3" />
     <option name="y" value="93" />
     <option name="width" value="1346" />
@@ -365,15 +353,15 @@
       <workItem from="1599668506806" duration="5452000" />
       <workItem from="1600002981942" duration="13410000" />
       <workItem from="1600177293701" duration="11311000" />
-      <workItem from="1600244298153" duration="8986000" />
+      <workItem from="1600244298153" duration="10025000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="116189000" />
+    <option name="totallyTimeSpent" value="117228000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="784" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27760968" />
@@ -778,13 +766,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/js/components/privateRoom.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="448">
-          <caret line="167" column="50" selection-start-line="167" selection-start-column="25" selection-end-line="167" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/web.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="363">
@@ -792,10 +773,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/resources/js/components/privateRoom.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="448">
+          <caret line="167" column="50" selection-start-line="167" selection-start-column="25" selection-end-line="167" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/resources/js/components/privateRoomCard.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="54" column="19" selection-start-line="54" selection-start-column="19" selection-end-line="54" selection-end-column="19" />
+        <state relative-caret-position="1219">
+          <caret line="53" column="43" lean-forward="true" selection-start-line="53" selection-start-column="43" selection-end-line="53" selection-end-column="43" />
         </state>
       </provider>
     </entry>
