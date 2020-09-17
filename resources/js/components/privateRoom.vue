@@ -25,20 +25,25 @@
             <div id="activated-body" :class="expandCurrent ? 'block' : 'hidden'" class="lg:block overflow-y-scroll py-2 px-2"
                  style="height: calc(100vh - 56px - 57px); max-height: calc(100vh - 56px - 57px)">
                 <div class="flex rounded-lg shadow-lg items-center bg-white p-2 text-black mb-2">
-                    <input v-model="newParticipant" class="rounded border border-gray-400 w-full px-2 py-1" type="text" placeholder="Add new friend by email...">
-                    <button class="rounded bg-blue-400 text-white p-1 ml-2" @click="addParticipant">
-                        <svg viewBox="0 0 16 16" class="w-5 h-5 bi bi-globe"
-                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
-                        </svg>
-                    </button>
+                    <div class="flex flex-col w-full">
+                        <div class="flex">
+                            <input :class="this.addParticipantError ? 'border-red-500' : ''" v-model="newParticipant" class="rounded border border-gray-400 w-full px-2 py-1" type="text" placeholder="Add new friend by email...">
+                            <button class="rounded bg-blue-400 text-white p-1 ml-2" @click="addParticipant">
+                                <svg viewBox="0 0 16 16" class="w-5 h-5 bi bi-globe"
+                                     fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <span v-if="this.addParticipantError" v-text="this.addParticipantError" class="mt-2 block text-xs font-italic text-red-500"></span>
+                    </div>
                 </div>
                 <div class="flex flex-col rounded-lg shadow-lg items-start bg-white p-2 text-blue-500">
                     <div v-for="participant in this.participants" class="flex items-center my-2 w-full pb-2 pl-2 border-b">
                         <img class="w-10 h-10 rounded-full"
                              :src="participant.avatar"
                              alt="avatar">
-                        <span :class="participant.active ? 'bg-green-400' : 'bg-red-400'" class="rounded-full w-3 h-3"></span>
+                        <span :class="participant.active ? 'bg-green-400' : 'bg-red-400'" :title="participant.active ? 'Online' : 'Offline'" class="rounded-full w-3 h-3"></span>
                         <span v-text="participant.name" class="text-lg pr-4 ml-2 break-words"></span>
                     </div>
                 </div>
@@ -134,6 +139,7 @@
                 participants: [],
                 expandCurrent: false,
                 newParticipant: '',
+                addParticipantError: false
             };
         },
 
@@ -197,7 +203,14 @@
                     axios.post('/private/addParticipant', {
                         private_room_id: this.room.id,
                         email: this.newParticipant,
-                    }).then(response => (this.participants.push(response.data)));
+                    })
+                    .then(response => {
+                        this.participants.push(response.data);
+                        this.addParticipantError = false;
+                    })
+                    .catch(error => {
+                        this.addParticipantError = error.response.data.errors.email[0];
+                    });
 
                     this.participants.push();
 

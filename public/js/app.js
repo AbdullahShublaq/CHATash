@@ -2188,6 +2188,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['room'],
   data: function data() {
@@ -2199,7 +2204,8 @@ __webpack_require__.r(__webpack_exports__);
       typingTimer: false,
       participants: [],
       expandCurrent: false,
-      newParticipant: ''
+      newParticipant: '',
+      addParticipantError: false
     };
   },
   computed: {
@@ -2263,7 +2269,11 @@ __webpack_require__.r(__webpack_exports__);
           private_room_id: this.room.id,
           email: this.newParticipant
         }).then(function (response) {
-          return _this2.participants.push(response.data);
+          _this2.participants.push(response.data);
+
+          _this2.addParticipantError = false;
+        })["catch"](function (error) {
+          _this2.addParticipantError = error.response.data.errors.email[0];
         });
         this.participants.push();
         this.newParticipant = '';
@@ -45273,61 +45283,76 @@ var render = function() {
                   "flex rounded-lg shadow-lg items-center bg-white p-2 text-black mb-2"
               },
               [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.newParticipant,
-                      expression: "newParticipant"
-                    }
-                  ],
-                  staticClass:
-                    "rounded border border-gray-400 w-full px-2 py-1",
-                  attrs: {
-                    type: "text",
-                    placeholder: "Add new friend by email..."
-                  },
-                  domProps: { value: _vm.newParticipant },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.newParticipant = $event.target.value
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "rounded bg-blue-400 text-white p-1 ml-2",
-                    on: { click: _vm.addParticipant }
-                  },
-                  [
-                    _c(
-                      "svg",
-                      {
-                        staticClass: "w-5 h-5 bi bi-globe",
-                        attrs: {
-                          viewBox: "0 0 16 16",
-                          fill: "currentColor",
-                          xmlns: "http://www.w3.org/2000/svg"
+                _c("div", { staticClass: "flex flex-col w-full" }, [
+                  _c("div", { staticClass: "flex" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.newParticipant,
+                          expression: "newParticipant"
                         }
+                      ],
+                      staticClass:
+                        "rounded border border-gray-400 w-full px-2 py-1",
+                      class: this.addParticipantError ? "border-red-500" : "",
+                      attrs: {
+                        type: "text",
+                        placeholder: "Add new friend by email..."
+                      },
+                      domProps: { value: _vm.newParticipant },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.newParticipant = $event.target.value
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "rounded bg-blue-400 text-white p-1 ml-2",
+                        on: { click: _vm.addParticipant }
                       },
                       [
-                        _c("path", {
-                          attrs: {
-                            "fill-rule": "evenodd",
-                            d:
-                              "M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
-                          }
-                        })
+                        _c(
+                          "svg",
+                          {
+                            staticClass: "w-5 h-5 bi bi-globe",
+                            attrs: {
+                              viewBox: "0 0 16 16",
+                              fill: "currentColor",
+                              xmlns: "http://www.w3.org/2000/svg"
+                            }
+                          },
+                          [
+                            _c("path", {
+                              attrs: {
+                                "fill-rule": "evenodd",
+                                d:
+                                  "M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
+                              }
+                            })
+                          ]
+                        )
                       ]
                     )
-                  ]
-                )
+                  ]),
+                  _vm._v(" "),
+                  this.addParticipantError
+                    ? _c("span", {
+                        staticClass:
+                          "mt-2 block text-xs font-italic text-red-500",
+                        domProps: {
+                          textContent: _vm._s(this.addParticipantError)
+                        }
+                      })
+                    : _vm._e()
+                ])
               ]
             ),
             _vm._v(" "),
@@ -45352,7 +45377,10 @@ var render = function() {
                     _vm._v(" "),
                     _c("span", {
                       staticClass: "rounded-full w-3 h-3",
-                      class: participant.active ? "bg-green-400" : "bg-red-400"
+                      class: participant.active ? "bg-green-400" : "bg-red-400",
+                      attrs: {
+                        title: participant.active ? "Online" : "Offline"
+                      }
                     }),
                     _vm._v(" "),
                     _c("span", {

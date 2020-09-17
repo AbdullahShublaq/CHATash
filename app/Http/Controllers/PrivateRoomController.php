@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\PrivateRoom;
+use App\PrivateRoomParticipant;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class PrivateRoomController extends Controller
 {
@@ -61,12 +63,19 @@ class PrivateRoomController extends Controller
 
     public function addParticipant(Request $request)
     {
+
         $data = $request->validate([
             'private_room_id' => 'required|exists:private_rooms,id',
-            'email' => 'required|string|email',
+            'email' => 'required|string|email|exists:users,email',
         ]);
 
         $user = User::where('email', $data['email'])->first();
+
+        $userFound = PrivateRoomParticipant::where('private_room_id', $data['private_room_id'])->where('user_id', $user->id)->first();
+        if(isset($userFound)){
+            throw ValidationException::withMessages(['email' => 'A user with this email already in this room']);
+        }
+
         $room = PrivateRoom::where('id', $data['private_room_id'])->first();
         $room->participants()->attach($user);
 

@@ -21,9 +21,9 @@
 <body class="bg-gray-100 h-screen antialiased leading-none">
 <div id="app">
     <nav id="nav" class="bg-blue-900 shadow py-3">
-        <div class="container mx-auto px-6 md:px-0">
+        <div class="mx-auto px-6 md:px-0">
             <div class="flex items-center justify-center">
-                <div class="mr-6">
+                <div class="mr-6 ml-8">
                     <a href="{{ url('/') }}" class="flex text-lg font-semibold text-gray-100 no-underline">
                         {{ config('app.name', 'Laravel') }}
                         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chat-quote ml-1" fill="currentColor"
@@ -39,7 +39,7 @@
                         </svg>
                     </a>
                 </div>
-                <div class="flex-1 text-right">
+                <div class="flex-1 text-right mr-4">
                     @guest
                         <a class="no-underline hover:underline text-gray-300 text-sm p-3"
                            href="{{ route('login') }}">{{ __('Login') }}</a>
