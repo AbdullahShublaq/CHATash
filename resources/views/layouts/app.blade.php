@@ -53,7 +53,7 @@
                                 <template v-slot:trigger>
                                     <div class="flex justify-end items-center">
                                         <img class="w-8 h-8 rounded-full"
-                                             src="https://avatars.dicebear.com/v2/gridy/{{crypt(Auth::user()->email,'st')}}.svg"
+                                             src="https://ui-avatars.com/api/?name={{urlencode(Auth::user()->name)}}&amp;background=random&amp;color=fff"
                                              alt="avatar">
                                         <span class="text-gray-300 text-sm pr-4 ml-2">
                                         {{ Auth::user()->name }}

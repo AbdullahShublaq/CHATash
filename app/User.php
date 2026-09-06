@@ -39,7 +39,7 @@ class User extends Authenticatable
 
     protected $appends = ['avatar', 'active'];
     public function getAvatarAttribute() {
-        return "https://avatars.dicebear.com/v2/gridy/".crypt($this->email, 'st').".svg";
+        return "https://ui-avatars.com/api/?name=".urlencode($this->name)."&background=random&color=fff";
     }
     public function getActiveAttribute() {
         return false;
