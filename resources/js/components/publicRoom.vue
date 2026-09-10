@@ -112,82 +112,75 @@
     </div>
 </template>
 
-<script>
-    export default {
-        data() {
-            return {
-                messages: [],
-                newMessage: '',
-                currentUser: window.App.user,
-                activePeer: false,
-                typingTimer: false,
-                participants: [],
-                expandCurrent: false
-            };
-        },
+<script setup>
+import { ref, computed, onMounted, onUpdated, onUnmounted } from 'vue';
 
-        computed: {
-            channel() {
-                return window.Echo.join('messages');
-            }
-        },
+const messages = ref([]);
+const newMessage = ref('');
+const currentUser = window.App.user;
+const activePeer = ref(false);
+let typingTimer = null;
+const participants = ref([]);
+const expandCurrent = ref(false);
 
-        created() {
-            axios.get('/public/messages').then(response => (this.messages = response.data));
+const channel = computed(() => window.Echo.join('messages'));
 
-            this.channel
-                .here(users => {
-                    this.participants = users;
-                })
-                .joining(user => {
-                    this.participants.push(user);
-                })
-                .leaving(user => {
-                    this.participants.splice(this.participants.indexOf(user), 1);
-                })
-                .listen('PublicRoomMessageCreated', ({message}) => {
-                    this.messages.push(message)
-                })
-                .listenForWhisper('typing', this.flashActivePeer);
-        },
+onMounted(() => {
+    axios.get('/public/messages').then(response => (messages.value = response.data));
 
-        updated() {
-            var container = this.$el.querySelector("#room-messages");
-            container.scrollTop = container.scrollHeight;
-        },
+    channel.value
+        .here(users => {
+            participants.value = users;
+        })
+        .joining(user => {
+            participants.value.push(user);
+        })
+        .leaving(user => {
+            participants.value.splice(participants.value.indexOf(user), 1);
+        })
+        .listen('PublicRoomMessageCreated', ({message}) => {
+            messages.value.push(message)
+        })
+        .listenForWhisper('typing', flashActivePeer);
+});
 
-        methods: {
-            addMessage() {
-                if (this.newMessage != null && this.newMessage.trim() != '') {
-                    this.activePeer = false;
+onUpdated(() => {
+    const container = document.getElementById("room-messages");
+    if (container) container.scrollTop = container.scrollHeight;
+});
 
-                    axios.post('/public/messages', {
-                        user_id: this.currentUser.id,
-                        message: this.newMessage
-                    });
+onUnmounted(() => {
+    if (typingTimer) clearTimeout(typingTimer);
+});
 
-                    this.newMessage = '';
-                }
+function addMessage() {
+    if (newMessage.value != null && newMessage.value.trim() != '') {
+        activePeer.value = false;
 
-            },
+        axios.post('/public/messages', {
+            user_id: currentUser.id,
+            message: newMessage.value
+        });
 
-            tagPeers() {
-                this.channel.whisper('typing', {
-                    user: window.App.user
-                });
-            },
-
-            flashActivePeer(e) {
-                this.activePeer = e;
-
-                if (this.typingTimer) clearTimeout(this.typingTimer);
-
-                this.typingTimer = setTimeout(
-                    () => (this.activePeer = false), 2500
-                );
-            },
-        }
+        newMessage.value = '';
     }
+}
+
+function tagPeers() {
+    channel.value.whisper('typing', {
+        user: window.App.user
+    });
+}
+
+function flashActivePeer(e) {
+    activePeer.value = e;
+
+    if (typingTimer) clearTimeout(typingTimer);
+
+    typingTimer = setTimeout(
+        () => (activePeer.value = false), 2500
+    );
+}
 </script>
 
 <style scoped>

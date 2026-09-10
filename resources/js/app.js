@@ -4,37 +4,28 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+import './bootstrap';
 
-window.Vue = require('vue');
+import { createApp } from 'vue';
 
-import VModal from 'vue-js-modal'
-Vue.use(VModal);
+import Dropdown from './components/Dropdown.vue';
+import PublicRoom from './components/publicRoom.vue';
+import NewRoomModal from './components/NewRoomModal.vue';
+import PrivateRoom from './components/privateRoom.vue';
+import PrivateRoomCard from './components/privateRoomCard.vue';
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
+const app = createApp({});
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-
-// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('dropdown', require('./components/Dropdown.vue').default);
-Vue.component('public-room', require('./components/publicRoom.vue').default);
-Vue.component('new-room-modal', require('./components/NewRoomModal.vue').default);
-Vue.component('private-room', require('./components/privateRoom.vue').default);
-Vue.component('private-room-card', require('./components/privateRoomCard.vue').default);
+app.component('dropdown', Dropdown);
+app.component('public-room', PublicRoom);
+app.component('new-room-modal', NewRoomModal);
+app.component('private-room', PrivateRoom);
+app.component('private-room-card', PrivateRoomCard);
 
 /**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
+ * Next, we will attach the fresh Vue application instance to the page.
+ * Then, you may begin adding components to this application
+ * or customizing the JavaScript scaffolding to fit your unique needs.
  */
 
-const app = new Vue({
-    el: '#app',
-});
+app.mount('#app');

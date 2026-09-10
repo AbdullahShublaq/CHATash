@@ -12,11 +12,7 @@
                     back
                 </a>
             </div>
-            <div class="flex justify-between w-full items-end">
-                <h2 class="text-gray-600 text-lg font-semibold">My PrivateRooms</h2>
-                <a href="/projects/create" class="bg-blue-400 text-white rounded-lg py-2 px-4"
-                   @click.prevent="$modal.show('new-room')">Create room</a>
-            </div>
+            <new-room-modal></new-room-modal>
         </div>
         <div class="flex justify-between flex-wrap border border-gray-400 rounded-lg w-full p-4 overflow-auto mb-8"
              style="max-height: calc(100vh - 56px - 80px - 80px)">
@@ -27,7 +23,5 @@
             @endforelse
         </div>
     </div>
-
-    <new-room-modal></new-room-modal>
 
 @endsection

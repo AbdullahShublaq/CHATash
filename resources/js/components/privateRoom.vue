@@ -12,7 +12,7 @@
                         </svg>
                         <h1 class="text-xl font-semibold font-mono ml-2">
                             Friends
-                            <span v-text="this.room.participants.length" class="rounded-full p-2 text-xs bg-blue-400 text-white"></span>
+                            <span v-text="room.participants.length" class="rounded-full p-2 text-xs bg-blue-400 text-white"></span>
                         </h1>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                 <div class="flex rounded-lg shadow-lg items-center bg-white p-2 text-black mb-2">
                     <div class="flex flex-col w-full">
                         <div class="flex">
-                            <input :class="this.addParticipantError ? 'border-red-500' : ''" v-model="newParticipant" class="rounded border border-gray-400 w-full px-2 py-1" type="text" placeholder="Add new friend by email...">
+                            <input :class="addParticipantError ? 'border-red-500' : ''" v-model="newParticipant" class="rounded border border-gray-400 w-full px-2 py-1" type="text" placeholder="Add new friend by email...">
                             <button class="rounded bg-blue-400 text-white p-1 ml-2" @click="addParticipant">
                                 <svg viewBox="0 0 16 16" class="w-5 h-5 bi bi-globe"
                                      fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -35,11 +35,11 @@
                                 </svg>
                             </button>
                         </div>
-                        <span v-if="this.addParticipantError" v-text="this.addParticipantError" class="mt-2 block text-xs font-italic text-red-500"></span>
+                        <span v-if="addParticipantError" v-text="addParticipantError" class="mt-2 block text-xs font-italic text-red-500"></span>
                     </div>
                 </div>
                 <div class="flex flex-col rounded-lg shadow-lg items-start bg-white p-2 text-blue-500">
-                    <div v-for="participant in this.participants" class="flex items-center my-2 w-full pb-2 pl-2 border-b">
+                    <div v-for="participant in participants" class="flex items-center my-2 w-full pb-2 pl-2 border-b">
                         <img class="w-10 h-10 rounded-full"
                              :src="participant.avatar"
                              alt="avatar">
@@ -59,7 +59,7 @@
                          xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M11.5 8h-7a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1zm-7-1a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-7zm0-3a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"></path>
                     </svg>
-                    <h1 class="text-xl text-white font-mono ml-2" v-text="this.room.name"></h1>
+                    <h1 class="text-xl text-white font-mono ml-2" v-text="room.name"></h1>
                 </div>
                 <div class="flex items-center">
                     <a href="/home"
@@ -126,115 +126,112 @@
     </div>
 </template>
 
-<script>
-    export default {
-        props: ['room'],
-        data() {
-            return {
-                messages: [],
-                newMessage: '',
-                currentUser: window.App.user,
-                activePeer: false,
-                typingTimer: false,
-                participants: [],
-                expandCurrent: false,
-                newParticipant: '',
-                addParticipantError: false
-            };
-        },
+<script setup>
+import { ref, computed, onMounted, onUpdated, onUnmounted } from 'vue';
 
-        computed: {
-            channel() {
-                return window.Echo.join('messages.' + this.room.id);
-            }
-        },
+const props = defineProps({
+    room: { type: Object, required: true },
+});
 
-        created() {
-            this.participants = this.room.participants;
+const messages = ref([]);
+const newMessage = ref('');
+const currentUser = window.App.user;
+const activePeer = ref(false);
+let typingTimer = null;
+const participants = ref([]);
+const expandCurrent = ref(false);
+const newParticipant = ref('');
+const addParticipantError = ref(false);
 
-            axios.get('/private/messages', {
-                params: {
-                    private_room_id: this.room.id
-                }
-            }).then(response => (this.messages = response.data));
+const channel = computed(() => window.Echo.join('messages.' + props.room.id));
 
-            this.channel
-                .here(users => {
-                    var participants = this.participants;
-                    $.each(users, function(key, value) {
-                        participants.find(x => x.id === value.user.id).active = true;
-                    });
-                })
-                .joining(user => {
-                    this.participants.find(x => x.id === user.user.id).active = true;
-                })
-                .leaving(user => {
-                    this.participants.find(x => x.id === user.user.id).active = false;
-                })
-                .listen('PrivateRoomMessageCreated', ({message}) => {
-                    this.messages.push(message)
-                })
-                .listenForWhisper('typing', this.flashActivePeer);
-        },
+onMounted(() => {
+    participants.value = props.room.participants;
 
-        updated() {
-            var container = this.$el.querySelector("#room-messages");
-            container.scrollTop = container.scrollHeight;
-        },
-
-        methods: {
-            addMessage() {
-                if (this.newMessage != null && this.newMessage.trim() != '') {
-                    this.activePeer = false;
-
-                    axios.post('/private/messages', {
-                        private_room_id: this.room.id,
-                        user_id: this.currentUser.id,
-                        message: this.newMessage
-                    });
-
-                    this.newMessage = '';
-                }
-            },
-
-            addParticipant(){
-                if (this.newParticipant != null && this.newParticipant.trim() != '') {
-
-                    axios.post('/private/addParticipant', {
-                        private_room_id: this.room.id,
-                        email: this.newParticipant,
-                    })
-                    .then(response => {
-                        this.participants.push(response.data);
-                        this.addParticipantError = false;
-                    })
-                    .catch(error => {
-                        this.addParticipantError = error.response.data.errors.email[0];
-                    });
-
-                    this.participants.push();
-
-                    this.newParticipant = '';
-                }
-            },
-
-            tagPeers() {
-                this.channel.whisper('typing', {
-                    user: window.App.user
-                });
-            },
-
-            flashActivePeer(e) {
-                this.activePeer = e;
-
-                if (this.typingTimer) clearTimeout(this.typingTimer);
-
-                this.typingTimer = setTimeout(
-                    () => (this.activePeer = false), 2500
-                );
-            },
+    axios.get('/private/messages', {
+        params: {
+            private_room_id: props.room.id
         }
+    }).then(response => (messages.value = response.data));
+
+    channel.value
+        .here(users => {
+            users.forEach(value => {
+                const participant = participants.value.find(x => x.id === value.user.id);
+                if (participant) participant.active = true;
+            });
+        })
+        .joining(user => {
+            const participant = participants.value.find(x => x.id === user.user.id);
+            if (participant) participant.active = true;
+        })
+        .leaving(user => {
+            const participant = participants.value.find(x => x.id === user.user.id);
+            if (participant) participant.active = false;
+        })
+        .listen('PrivateRoomMessageCreated', ({message}) => {
+            messages.value.push(message)
+        })
+        .listenForWhisper('typing', flashActivePeer);
+});
+
+onUpdated(() => {
+    const container = document.getElementById("room-messages");
+    if (container) container.scrollTop = container.scrollHeight;
+});
+
+onUnmounted(() => {
+    if (typingTimer) clearTimeout(typingTimer);
+});
+
+function addMessage() {
+    if (newMessage.value != null && newMessage.value.trim() != '') {
+        activePeer.value = false;
+
+        axios.post('/private/messages', {
+            private_room_id: props.room.id,
+            user_id: currentUser.id,
+            message: newMessage.value
+        });
+
+        newMessage.value = '';
     }
+}
+
+function addParticipant() {
+    if (newParticipant.value != null && newParticipant.value.trim() != '') {
+
+        axios.post('/private/addParticipant', {
+            private_room_id: props.room.id,
+            email: newParticipant.value,
+        })
+        .then(response => {
+            participants.value.push(response.data);
+            addParticipantError.value = false;
+        })
+        .catch(error => {
+            addParticipantError.value = error.response.data.errors.email[0];
+        });
+
+        newParticipant.value = '';
+    }
+}
+
+function tagPeers() {
+    channel.value.whisper('typing', {
+        user: window.App.user
+    });
+}
+
+function flashActivePeer(e) {
+    activePeer.value = e;
+
+    if (typingTimer) clearTimeout(typingTimer);
+
+    typingTimer = setTimeout(
+        () => (activePeer.value = false), 2500
+    );
+}
 </script>
 
 <style scoped>

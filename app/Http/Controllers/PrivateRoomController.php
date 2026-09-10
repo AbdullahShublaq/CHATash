@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\PrivateRoom;
 use App\PrivateRoomParticipant;
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;

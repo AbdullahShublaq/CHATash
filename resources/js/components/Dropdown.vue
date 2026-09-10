@@ -16,34 +16,32 @@
     </div>
 </template>
 
-<script>
-    export default {
-        props: {
-            width: { default: 'auto' },
-            align: { default: 'left' }
-        },
+<script setup>
+import { ref, watch, onBeforeUnmount } from 'vue';
 
-        data() {
-            return { isOpen: false }
-        },
+const props = defineProps({
+    width: { type: String, default: 'auto' },
+    align: { type: String, default: 'left' }
+});
 
-        watch: {
-            isOpen(isOpen) {
-                if(isOpen) {
-                    document.addEventListener('click', this.closeIfClickOutside);
-                }
-            }
-        },
+const isOpen = ref(false);
 
-        methods: {
-            closeIfClickOutside(event) {
-                if(! event.target.closest('.dropdown')){
-                    this.isOpen = false;
-                    document.removeEventListener('click', this.closeIfClickOutside);
-                }
-            }
-        }
+watch(isOpen, (open) => {
+    if (open) {
+        document.addEventListener('click', closeIfClickOutside);
     }
+});
+
+onBeforeUnmount(() => {
+    document.removeEventListener('click', closeIfClickOutside);
+});
+
+function closeIfClickOutside(event) {
+    if (! event.target.closest('.dropdown')) {
+        isOpen.value = false;
+        document.removeEventListener('click', closeIfClickOutside);
+    }
+}
 </script>
 
 <style scoped>
