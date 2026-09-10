@@ -19,7 +19,7 @@
                                     <input type="text" id="name"
                                            maxlength="15"
                                            class="border p-2 text-xs block w-full rounded bg-transparent"
-                                           :class="form.errors.name ? 'border-red-500' : 'border-muted'"
+                                           :class="form.errors.name ? 'border-red-500' : ''"
                                            v-model="form.name"
                                     >
                                     <span class="text-xs font-italic text-red-500" v-if="form.errors.name"

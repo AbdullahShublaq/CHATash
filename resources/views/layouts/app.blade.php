@@ -58,7 +58,7 @@
                                 </template>
 
                                 <a href="{{ route('logout') }}"
-                                   class="block text-default no-underline text-sm leading-loose px-4 hover:bg-gray-300"
+                                   class="block no-underline text-sm leading-loose px-4 hover:bg-gray-300"
                                    onclick="event.preventDefault();
                                         document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
