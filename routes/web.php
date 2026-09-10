@@ -1,5 +1,15 @@
 <?php
 
+use App\Http\Controllers\Auth\ConfirmPasswordController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PrivateRoomController;
+use App\Http\Controllers\PrivateRoomMessagesController;
+use App\Http\Controllers\PublicRoomController;
+use App\Http\Controllers\PublicRoomMessagesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,29 +26,29 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('/login', 'Auth\LoginController@login');
-Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 
-Route::get('/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-Route::post('/register', 'Auth\RegisterController@register');
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-Route::get('/password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-Route::post('/password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register']);
 
-Route::get('/password/confirm', 'Auth\ConfirmPasswordController@showConfirmForm')->name('password.confirm');
-Route::post('/password/confirm', 'Auth\ConfirmPasswordController@confirm');
+Route::get('/password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+
+Route::get('/password/confirm', [ConfirmPasswordController::class, 'showConfirmForm'])->name('password.confirm');
+Route::post('/password/confirm', [ConfirmPasswordController::class, 'confirm']);
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-    Route::resource('/public', 'PublicRoomController')->only('index');
-    Route::resource('/public/messages', 'PublicRoomMessagesController')->only('index', 'store');
+    Route::resource('/public', PublicRoomController::class)->only('index');
+    Route::resource('/public/messages', PublicRoomMessagesController::class)->only('index', 'store');
 
-    Route::resource('/private/messages', 'PrivateRoomMessagesController')->only('index', 'store');
-    Route::resource('/private', 'PrivateRoomController')->only('index', 'show', 'store');
-    Route::post('/private/addParticipant', 'PrivateRoomController@addParticipant');
+    Route::resource('/private/messages', PrivateRoomMessagesController::class)->only('index', 'store');
+    Route::resource('/private', PrivateRoomController::class)->only('index', 'show', 'store');
+    Route::post('/private/addParticipant', [PrivateRoomController::class, 'addParticipant']);
 });
-

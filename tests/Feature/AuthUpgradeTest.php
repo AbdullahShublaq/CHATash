@@ -6,7 +6,7 @@ use App\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-class AuthUpgradeCheck extends TestCase
+class AuthUpgradeTest extends TestCase
 {
     use DatabaseTransactions;
 
