@@ -59,6 +59,18 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "assets": [
+            "@php artisan view:clear --ansi",
+            "npm ci",
+            "npm run build"
+        ],
+        "deploy": [
+            "@php artisan down --ansi",
+            "@php artisan migrate --force --ansi",
+            "@php artisan optimize --ansi",
+            "@composer assets",
+            "@php artisan up --ansi"
         ]
     }
 }
