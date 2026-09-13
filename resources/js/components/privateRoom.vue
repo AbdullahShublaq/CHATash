@@ -1,128 +1,113 @@
 <template>
-    <div class="flex flex-wrap h-full" style="height: calc(100vh - 56px)">
-        <!--start-activatedUser-side-->
-        <div class="flex flex-col w-full lg:w-1/4">
-            <div id="activated-header" class="flex items-center justify-between text-blue-500 shadow-lg w-full py-4 px-4">
-                <div class="flex items-center w-full justify-between">
-                    <div class="flex items-center pl-4">
-                        <svg viewBox="0 0 16 16" color="#63b3ed" class="w-6 h-6 bi bi-globe opacity-20"
-                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                  d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path>
+    <div class="flex flex-col bg-gray-100 h-[calc(100vh-56px)]">
+        <div class="relative flex flex-1 min-h-0">
+            <!-- Mobile drawer backdrop -->
+            <div v-if="expandCurrent" class="absolute inset-0 z-20 bg-gray-900/50 md:hidden" @click="expandCurrent = false"></div>
+
+            <!-- Sidebar -->
+            <aside :class="[expandCurrent ? 'flex' : 'hidden', 'md:flex absolute z-30 md:static inset-y-0 left-0 w-72 md:w-64 lg:w-72 flex-col bg-white border-r border-gray-200 shadow-xl md:shadow-none']">
+                <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200 flex-shrink-0">
+                    <div class="flex items-center">
+                        <svg viewBox="0 0 16 16" color="#3b82f6" class="w-6 h-6 mr-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path>
                         </svg>
-                        <h1 class="text-xl font-semibold font-mono ml-2">
+                        <h1 class="text-lg font-semibold text-gray-800">
                             Friends
-                            <span v-text="room.participants.length" class="rounded-full p-2 text-xs bg-blue-400 text-white"></span>
+                            <span v-text="room.participants.length" class="ml-2 inline-block rounded-full px-2 py-0.5 text-xs bg-blue-100 text-blue-700"></span>
                         </h1>
                     </div>
-                </div>
-                <div @click="expandCurrent = !expandCurrent" class="block lg:hidden">
-                    <button class="flex items-center px-3 py-2 border rounded text-blue-400 border-blue-400 border">
-                        <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+                    <button type="button" class="md:hidden text-gray-500 hover:text-gray-700" @click="expandCurrent = false" aria-label="Close friends list">
+                        <svg viewBox="0 0 16 16" class="w-5 h-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>
                     </button>
                 </div>
-            </div>
-            <div id="activated-body" :class="expandCurrent ? 'block' : 'hidden'" class="lg:block overflow-y-scroll py-2 px-2"
-                 style="height: calc(100vh - 56px - 57px); max-height: calc(100vh - 56px - 57px)">
-                <div class="flex rounded-lg shadow-lg items-center bg-white p-2 text-black mb-2">
-                    <div class="flex flex-col w-full">
+
+                <div class="flex-1 min-h-0 overflow-y-auto p-3">
+                    <div class="mb-3">
                         <div class="flex">
-                            <input :class="addParticipantError ? 'border-red-500' : ''" v-model="newParticipant" class="rounded border border-gray-400 w-full px-2 py-1" type="text" placeholder="Add new friend by email...">
-                            <button class="rounded bg-blue-400 text-white p-1 ml-2" @click="addParticipant">
-                                <svg viewBox="0 0 16 16" class="w-5 h-5 bi bi-globe"
-                                     fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <input :class="addParticipantError ? 'border-red-500' : 'border-gray-300'" v-model="newParticipant" class="form-input flex-1 rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" type="text" placeholder="Add friend by email...">
+                            <button type="button" class="rounded-lg bg-blue-600 text-white p-2 ml-2 hover:bg-blue-700 transition flex-shrink-0" @click="addParticipant" title="Add friend">
+                                <svg viewBox="0 0 16 16" class="w-4 h-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
                                 </svg>
                             </button>
                         </div>
-                        <span v-if="addParticipantError" v-text="addParticipantError" class="mt-2 block text-xs font-italic text-red-500"></span>
+                        <span v-if="addParticipantError" v-text="addParticipantError" class="mt-2 block text-xs text-red-500"></span>
                     </div>
-                </div>
-                <div class="flex flex-col rounded-lg shadow-lg items-start bg-white p-2 text-blue-500">
-                    <div v-for="participant in participants" class="flex items-center my-2 w-full pb-2 pl-2 border-b">
-                        <img class="w-10 h-10 rounded-full"
-                             :src="participant.avatar"
-                             alt="avatar">
-                        <span :class="participant.active ? 'bg-green-400' : 'bg-red-400'" :title="participant.active ? 'Online' : 'Offline'" class="rounded-full w-3 h-3"></span>
-                        <span v-text="participant.name" class="text-lg pr-4 ml-2 break-words"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--end-activatedUser-side-->
 
-        <!--start-messages-side-->
-        <div class="flex flex-col w-full lg:w-3/4">
-            <div id="room-header" class="flex items-center justify-between bg-blue-400 z-10 shadow-lg w-full py-4 px-6">
-                <div class="flex items-center">
-                    <svg viewBox="0 0 16 16" color="#FFF" class="w-6 h-6 bi bi-globe opacity-20" fill="currentColor"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M11.5 8h-7a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1zm-7-1a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-7zm0-3a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"></path>
-                    </svg>
-                    <h1 class="text-xl text-white font-mono ml-2" v-text="room.name"></h1>
+                    <div class="divide-y divide-gray-100">
+                        <div v-for="participant in participants" class="flex items-center py-2 px-2 rounded-lg hover:bg-gray-50">
+                            <img class="w-9 h-9 rounded-full" :src="participant.avatar" alt="avatar">
+                            <div class="ml-3 flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-800 truncate" v-text="participant.name"></p>
+                                <p class="text-xs text-gray-400" v-text="participant.active ? 'Online' : 'Offline'"></p>
+                            </div>
+                            <span :class="participant.active ? 'bg-green-500' : 'bg-gray-300'" class="rounded-full w-3 h-3 flex-shrink-0"></span>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex items-center">
-                    <a href="/home"
-                       class="flex items-center rounded rounded-lg font-semibold text-sm text-white bg-red-500 px-2 py-1">
-                        Leave
-                        <svg viewBox="0 0 16 16" class="ml-1 w-4 h-4 bi bi-globe opacity-20" fill="currentColor"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                  d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z"></path>
+            </aside>
+
+            <!-- Chat -->
+            <div class="flex flex-col flex-1 min-w-0">
+                <header class="flex items-center justify-between bg-blue-900 px-4 py-3 shadow flex-shrink-0">
+                    <div class="flex items-center min-w-0">
+                        <button type="button" class="md:hidden mr-3 text-white hover:text-blue-200" @click="expandCurrent = true" aria-label="Show friends list">
+                            <svg viewBox="0 0 20 20" class="w-5 h-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+                        </button>
+                        <svg viewBox="0 0 16 16" class="w-6 h-6 text-white opacity-60 mr-2 flex-shrink-0" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M11.5 8h-7a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1zm-7-1a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-7zm0-3a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"></path>
                         </svg>
-                    </a>
-                </div>
-            </div>
-            <div id="room-messages" class="overflow-auto bg-white"
-                 style="height: calc(100vh - 56px - 56px - 58px); max-height: calc(100vh - 56px - 56px - 58px)">
-                <div class="flex flex-col">
-                    <div class="p-1" v-for="message in messages">
-                        <div v-if="currentUser.id != message.user_id" class="flex justify-start">
-                            <img class="w-10 h-10 rounded-full"
-                                 :src="message.user_avatar"
-                                 alt="avatar"
-                                 :title="message.user_name">
-                            <div class="flex flex-col rounded-tl-none rounded-lg w-full md:w-auto md:max-w-lg ml-1 bg-gray-200 py-2 px-4">
-                                <p v-text="message.message" class="leading-normal text-sm mb-2"></p>
-                                <span v-text="message.time" class="text-xs text-gray-600 font-light"></span>
+                        <h1 class="text-lg font-semibold text-white truncate" v-text="room.name"></h1>
+                    </div>
+                    <div class="flex items-center flex-shrink-0 ml-3">
+                        <a href="/home" class="flex items-center text-sm font-semibold text-white bg-red-500 hover:bg-red-600 rounded-lg px-3 py-1.5 transition">
+                            Leave
+                            <svg viewBox="0 0 16 16" class="ml-1 w-4 h-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </header>
+
+                <div id="room-messages" class="flex-1 min-h-0 overflow-y-auto px-4 py-4 bg-gray-100">
+                    <div class="flex flex-col space-y-3">
+                        <div v-for="message in messages" :class="currentUser.id != message.user_id ? 'flex justify-start' : 'flex justify-end'">
+                            <div class="flex items-end space-x-2 max-w-[85%] md:max-w-[70%]">
+                                <img v-if="currentUser.id != message.user_id" class="w-8 h-8 rounded-full flex-shrink-0 mb-1" :src="message.user_avatar" alt="avatar" :title="message.user_name">
+                                <div :class="currentUser.id != message.user_id ? 'bg-white border border-gray-200 rounded-2xl rounded-bl-md' : 'bg-blue-600 rounded-2xl rounded-br-md'" class="px-4 py-2 shadow-sm">
+                                    <p v-if="currentUser.id != message.user_id" class="text-xs font-medium text-blue-600 mb-0.5" v-text="message.user_name"></p>
+                                    <p v-text="message.message" :class="currentUser.id == message.user_id ? 'text-white' : 'text-gray-800'" class="leading-relaxed text-sm break-words"></p>
+                                    <span v-text="message.time" :class="currentUser.id == message.user_id ? 'text-blue-100' : 'text-gray-400'" class="text-xs font-normal"></span>
+                                </div>
                             </div>
                         </div>
-                        <div v-else class="flex justify-end">
-                            <div class="flex flex-col rounded-tr-none rounded-lg w-full md:w-auto md:max-w-lg bg-blue-500 py-2 px-4">
-                                <p v-text="message.message" class="leading-normal text-sm text-white mb-2"></p>
-                                <span v-text="message.time" class="text-xs text-gray-300 font-light"></span>
+                        <div v-if="activePeer" class="flex justify-start items-center">
+                            <img class="w-8 h-8 rounded-full mr-2" :src="activePeer.user.avatar" alt="avatar" :title="activePeer.user.name">
+                            <div class="bg-white border border-gray-200 rounded-2xl rounded-bl-md px-4 py-2 shadow-sm flex items-center">
+                                <span class="text-xs font-semibold text-gray-600 mr-1" v-text="activePeer.user.name"></span>
+                                <span class="text-xs text-gray-500">is typing</span>
+                                <span class="flex space-x-0.5 ml-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce" style="animation-delay: 0s"></span>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce" style="animation-delay: 0.15s"></span>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce" style="animation-delay: 0.3s"></span>
+                                </span>
                             </div>
                         </div>
                     </div>
-                    <div v-if="activePeer" class="flex justify-start my-2">
-                        <img class="w-8 h-8 rounded-full"
-                             :src="activePeer.user.avatar"
-                             alt="avatar"
-                             :title="activePeer.user.name">
-                        <div class="flex items-center rounded-tl-none rounded-lg w-auto ml-2 bg-gray-200 px-2">
-                            <p class="text-xs font-semibold font-mono">Typing...</p>
-                        </div>
-                    </div>
                 </div>
-            </div>
-            <div id="room-footer" class="flex items-center justify-between bg-gray-300 w-full py-2 px-6">
-                <input v-model="newMessage" @keyup.enter="addMessage" @keydown="tagPeers"
-                       class="rounded rounded-lg w-full px-4 py-2 form-input" rows="1"
-                       placeholder="Enter your message...">
-                <button @click="addMessage"
-                        class="flex items-center rounded rounded-lg text-white text-sm font-semibold font-mono ml-16 bg-blue-500 py-2 px-4">
-                    Send
-                    <svg viewBox="0 0 16 16" class="ml-1 w-3 h-3 bi bi-globe opacity-20" fill="currentColor"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                              d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z"></path>
-                        <path fill-rule="evenodd"
-                              d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z"></path>
-                    </svg>
-                </button>
+
+                <footer class="flex items-center bg-white border-t border-gray-200 px-4 py-3 flex-shrink-0">
+                    <input v-model="newMessage" @keyup.enter="addMessage" @keydown="tagPeers" class="form-input flex-1 min-w-0 rounded-full border-gray-300 px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Type your message...">
+                    <button @click="addMessage" class="flex items-center rounded-full text-white text-sm font-semibold ml-3 bg-blue-600 hover:bg-blue-700 px-4 py-2 transition flex-shrink-0">
+                        Send
+                        <svg viewBox="0 0 16 16" class="ml-1 w-3.5 h-3.5" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z"></path>
+                            <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z"></path>
+                        </svg>
+                    </button>
+                </footer>
             </div>
         </div>
-        <!--end-messages-side-->
     </div>
 </template>
 

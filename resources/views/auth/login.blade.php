@@ -47,12 +47,6 @@
                             {{ __('Login') }}
                         </button>
 
-                        @if (Route::has('password.request'))
-                            <a class="text-sm text-blue-600 hover:text-blue-800 font-medium" href="{{ route('password.request') }}">
-                                {{ __('Forgot Your Password?') }}
-                            </a>
-                        @endif
-
                         @if (Route::has('register'))
                             <p class="text-sm text-center text-gray-600 mt-2">
                                 {{ __("Don't have an account?") }}

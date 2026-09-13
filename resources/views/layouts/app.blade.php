@@ -11,7 +11,12 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
-        window.App = <?= json_encode(['user' => auth()->user()]); ?>
+        window.App = @json(['user' => [
+            'id' => auth()->user()->id,
+            'name' => auth()->user()->name,
+            'email' => auth()->user()->email,
+            'avatar' => auth()->user()->avatar,
+        ]]);
     </script>
 </head>
 <body class="bg-gray-100 h-screen antialiased leading-none">
