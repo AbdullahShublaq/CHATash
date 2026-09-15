@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\PrivateRoom;
-use App\PrivateRoomParticipant;
+use App\Models\PrivateRoom;
+use App\Models\PrivateRoomParticipant;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class PrivateRoomController extends Controller
@@ -85,7 +84,7 @@ class PrivateRoomController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param PrivateRoom $privateRoom
+     * @param \App\Models\PrivateRoom $privateRoom
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */

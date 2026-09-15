@@ -1,8 +1,7 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use App\Models\User;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,37 +12,38 @@ class PrivateRoom extends Model
     protected $fillable = ['name', 'slug'];
     protected $appends = ['path', 'participants', 'participantsCount'];
 
-    public function getPathAttribute(){
+    public function getPathAttribute(): string
+    {
         return $this->path();
     }
     public function getParticipantsAttribute(){
-        $participants = $this->participants()->get();
 //        $users = [];
 //        foreach ($participants as $participant){
 //            array_push($users, $participant->user()->first());
 //        }
-        return $participants;
+        return $this->participants()->get();
     }
-    public function getParticipantsCountAttribute(){
+    public function getParticipantsCountAttribute(): int
+    {
         return $this->participants()->count();
     }
 
-    public function path()
+    public function path(): string
     {
         return "/private/{$this->slug}";
     }
 
-    public function owner()
+    public function owner(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function participants()
+    public function participants(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(User::class, 'private_room_participants');
     }
 
-    public function messages()
+    public function messages(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(User::class, 'private_room_messages');
     }

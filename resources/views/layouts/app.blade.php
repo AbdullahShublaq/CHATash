@@ -22,15 +22,15 @@
         window.App = <?= json_encode(['user' => $appUser], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
     </script>
 </head>
-<body class="bg-gray-100 h-screen antialiased leading-none">
+<body class="min-h-screen antialiased leading-none">
 <div id="app">
-    <nav id="nav" class="bg-blue-900 shadow py-3">
+    <nav id="nav" class="sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-white/60 shadow-sm py-3">
         <div class="mx-auto px-6 md:px-0">
             <div class="flex items-center justify-center">
                 <div class="mr-6 ml-8">
-                    <a href="{{ url('/') }}" class="flex text-lg font-semibold text-gray-100 no-underline">
+                    <a href="{{ url('/') }}" class="flex text-lg font-semibold text-slate-800 no-underline">
                         {{ config('app.name', 'Laravel') }}
-                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chat-quote ml-1" fill="currentColor"
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chat-quote ml-1 text-indigo-600" fill="currentColor"
                              xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
                                   d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"></path>
@@ -45,10 +45,10 @@
                 </div>
                 <div class="flex-1 text-right mr-4">
                     @guest
-                        <a class="no-underline hover:underline text-gray-300 text-sm p-3"
+                        <a class="no-underline hover:text-indigo-600 text-slate-600 text-sm font-medium p-3 transition"
                            href="{{ route('login') }}">{{ __('Login') }}</a>
                         @if (Route::has('register'))
-                            <a class="no-underline hover:underline text-gray-300 text-sm p-3"
+                            <a class="no-underline hover:text-indigo-600 text-slate-600 text-sm font-medium p-3 transition"
                                href="{{ route('register') }}">{{ __('Register') }}</a>
                         @endif
                     @else
@@ -56,17 +56,17 @@
                             <dropdown align="right" width="">
                                 <template v-slot:trigger>
                                     <div class="flex justify-end items-center">
-                                        <img class="w-8 h-8 rounded-full"
+                                        <img class="w-8 h-8 rounded-full ring-2 ring-indigo-200 shadow"
                                              src="https://ui-avatars.com/api/?name={{urlencode(Auth::user()->name)}}&amp;background=random&amp;color=fff"
                                              alt="avatar">
-                                        <span class="text-gray-300 text-sm pr-4 ml-2">
+                                        <span class="text-slate-700 text-sm font-medium pr-4 ml-2">
                                         {{ Auth::user()->name }}
                                         </span>
                                     </div>
                                 </template>
 
                                 <a href="{{ route('logout') }}"
-                                   class="block no-underline text-sm leading-loose px-4 hover:bg-gray-300"
+                                   class="block px-4 py-2 text-sm font-medium text-slate-700 no-underline hover:bg-indigo-50 hover:text-indigo-700 transition"
                                    onclick="event.preventDefault();
                                         document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">

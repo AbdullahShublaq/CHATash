@@ -14,29 +14,38 @@
     @vite(['resources/css/app.css'])
 </head>
 <body class="antialiased leading-none">
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-gray-50 to-indigo-100 px-6">
-    <div class="w-full max-w-md text-center">
-        <h1 class="flex items-center justify-center text-gray-800 font-light tracking-wider text-5xl md:text-6xl mb-6">
-            {{ config('app.name', 'Laravel') }}
-            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chat-quote ml-3 text-blue-600" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+<div class="relative min-h-screen flex items-center justify-center overflow-hidden px-6">
+    <!-- decorative orbs -->
+    <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-indigo-300/40 blur-3xl"></div>
+    <div class="absolute top-1/3 -right-32 w-[28rem] h-[28rem] rounded-full bg-blue-300/40 blur-3xl"></div>
+    <div class="absolute -bottom-32 left-1/3 w-96 h-96 rounded-full bg-purple-300/30 blur-3xl"></div>
+
+    <div class="relative w-full max-w-md text-center">
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 shadow-lg shadow-indigo-500/30 mb-8">
+            <svg viewBox="0 0 16 16" class="w-10 h-10 text-white" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"></path>
                 <path d="M7.468 7.667c0 .92-.776 1.666-1.734 1.666S4 8.587 4 7.667C4 6.747 4.776 6 5.734 6s1.734.746 1.734 1.667z"></path>
                 <path fill-rule="evenodd" d="M6.157 6.936a.438.438 0 0 1-.56.293.413.413 0 0 1-.274-.527c.08-.23.23-.44.477-.546a.891.891 0 0 1 .698.014c.387.16.72.545.923.997.428.948.393 2.377-.942 3.706a.446.446 0 0 1-.612.01.405.405 0 0 1-.011-.59c1.093-1.087 1.058-2.158.77-2.794-.152-.336-.354-.514-.47-.563zm-.035-.012h-.001.001z"></path>
                 <path d="M11.803 7.667c0 .92-.776 1.666-1.734 1.666-.957 0-1.734-.746-1.734-1.666 0-.92.777-1.667 1.734-1.667.958 0 1.734.746 1.734 1.667z"></path>
-                <path fill-rule="evenodd" d="M10.492 6.936a.438.438 0 0 1-.56.293.413.413 0 0 1-.274-.527c.08-.23.23-.44.477-.546a.891.891 0 0 1 .698.014c.387.16.72.545.924.997.428.948.393 2.377-.942 3.706a.446.446 0 0 1-.613.01.405.405 0 0 1-.011-.59c1.093-1.087 1.058-2.158.77-2.794-.152-.336-.354-.514-.469-.563zm-.034-.012h-.002.002z"></path>
+                <path fill-rule="evenodd" d="M10.492 6.936a.438.438 0 0 1-.56.293.413.413 0 0 1-.274-.527c.08-.23.23-.44.477-.546a.891.891 0 0 1 .698.014c.387.16.72.545.924.997.428.948.392 2.377-.942 3.706a.446.446 0 0 1-.613.01.405.405 0 0 1-.011-.59c1.093-1.087 1.058-2.158.77-2.794-.152-.336-.354-.514-.469-.563zm-.034-.012h-.002.002z"></path>
             </svg>
+        </div>
+
+        <h1 class="text-5xl md:text-6xl font-bold tracking-tight mb-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            {{ config('app.name', 'Laravel') }}
         </h1>
-        <p class="mb-10 text-gray-600 font-sans text-lg">
+
+        <p class="mb-10 text-slate-600 text-lg font-sans leading-relaxed">
             Enjoy chatting with your friends.
         </p>
 
         @auth
             <div class="flex flex-wrap items-center justify-center gap-4">
-                <a href="{{ url('/home') }}" class="inline-flex items-center justify-center px-8 py-3 rounded-full font-semibold text-white bg-blue-600 hover:bg-blue-700 transition shadow-md">
+                <a href="{{ url('/home') }}" class="btn-primary px-8 py-3 rounded-full">
                     {{ __('Home') }}
                 </a>
                 <a href="{{ route('logout') }}"
-                   class="inline-flex items-center justify-center px-8 py-3 rounded-full font-semibold text-red-600 bg-white border-2 border-red-500 hover:bg-red-50 transition"
+                   class="inline-flex items-center justify-center px-8 py-3 rounded-full font-semibold text-rose-600 bg-white/80 border-2 border-rose-400 hover:bg-rose-50 backdrop-blur transition"
                    onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
@@ -45,11 +54,11 @@
             </div>
         @else
             <div class="flex flex-wrap items-center justify-center gap-4">
-                <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-8 py-3 rounded-full font-semibold text-white bg-blue-600 hover:bg-blue-700 transition shadow-md">
+                <a href="{{ route('login') }}" class="btn-primary px-8 py-3 rounded-full">
                     {{ __('Login') }}
                 </a>
                 @if (Route::has('register'))
-                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-8 py-3 rounded-full font-semibold text-blue-600 bg-white border-2 border-blue-500 hover:bg-blue-50 transition">
+                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-8 py-3 rounded-full font-semibold text-blue-700 bg-white/80 border-2 border-blue-400 hover:bg-blue-50 backdrop-blur transition">
                         {{ __('Register') }}
                     </a>
                 @endif

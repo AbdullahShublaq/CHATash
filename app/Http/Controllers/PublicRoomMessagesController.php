@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\PublicRoomMessageCreated;
 use App\Http\Resources\MessageResource;
-use App\PublicRoomMessage;
+use App\Models\PublicRoomMessage;
 use Illuminate\Http\Request;
 
 class PublicRoomMessagesController extends Controller

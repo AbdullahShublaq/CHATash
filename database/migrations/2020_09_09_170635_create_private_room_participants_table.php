@@ -11,7 +11,7 @@ class CreatePrivateRoomParticipantsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('private_room_participants', function (Blueprint $table) {
             $table->id();
@@ -29,7 +29,7 @@ class CreatePrivateRoomParticipantsTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('private_room_participants');
     }

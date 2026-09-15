@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\PrivateRoom;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -40,10 +38,12 @@ class User extends Authenticatable
     ];
 
     protected $appends = ['avatar', 'active'];
-    public function getAvatarAttribute() {
+    public function getAvatarAttribute(): string
+    {
         return "https://api.dicebear.com/10.x/pixel-art/svg?seed=".urlencode($this->name);
     }
-    public function getActiveAttribute() {
+    public function getActiveAttribute(): false
+    {
         return false;
     }
 

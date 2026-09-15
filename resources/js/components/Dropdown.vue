@@ -8,8 +8,8 @@
         </div>
 
         <div v-show="isOpen"
-             class="dropdown-menu absolute text-center bg-white py-2 rounded shadow mt-2"
-             :class="align === 'left' ? 'pin-l' : 'pin-r'"
+             class="dropdown-menu absolute top-full mt-2 py-1.5 min-w-[10rem] rounded-xl bg-white/80 backdrop-blur-xl border border-white/60 shadow-xl shadow-indigo-950/10 z-50"
+             :class="align === 'left' ? 'left-0' : 'right-0'"
              :style="{ width }">
             <slot></slot>
         </div>

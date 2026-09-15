@@ -14,7 +14,7 @@ class PrivateRoomMessageCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $message;
+    public String $message;
 
     /**
      * Create a new event instance.
@@ -24,15 +24,15 @@ class PrivateRoomMessageCreated implements ShouldBroadcast
     public function __construct($message)
     {
         //
-        $this->message =$message;
+        $this->message = $message;
     }
 
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return Channel|PresenceChannel
      */
-    public function broadcastOn()
+    public function broadcastOn(): Channel|PresenceChannel
     {
         return new PresenceChannel('messages.'. $this->message->private_room_id);
     }

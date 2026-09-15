@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\PrivateRoom;
+use App\Models\PrivateRoom;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;

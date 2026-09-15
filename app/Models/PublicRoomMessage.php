@@ -1,8 +1,7 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class PublicRoomMessage extends Model
@@ -10,7 +9,8 @@ class PublicRoomMessage extends Model
     //
     protected $fillable = ['user_id', 'message'];
 
-    public function user(){
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 }

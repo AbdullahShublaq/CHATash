@@ -11,7 +11,7 @@ class CreatePublicRoomsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('public_room_messages', function (Blueprint $table) {
             $table->id();
@@ -28,7 +28,7 @@ class CreatePublicRoomsTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('public_room_messages');
     }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\PublicRoomMessage;
+use App\Models\PublicRoomMessage;
 use Illuminate\Http\Request;
 
 class PublicRoomController extends Controller
@@ -42,7 +42,7 @@ class PublicRoomController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\PublicRoomMessage $publicRoom
+     * @param  \App\Models\PublicRoomMessage $publicRoom
      * @return \Illuminate\Http\Response
      */
     public function show(PublicRoomMessage $publicRoom)
@@ -53,7 +53,7 @@ class PublicRoomController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\PublicRoomMessage $publicRoom
+     * @param  \App\Models\PublicRoomMessage $publicRoom
      * @return \Illuminate\Http\Response
      */
     public function edit(PublicRoomMessage $publicRoom)
@@ -65,7 +65,7 @@ class PublicRoomController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  \App\PublicRoomMessage $publicRoom
+     * @param  \App\Models\PublicRoomMessage $publicRoom
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, PublicRoomMessage $publicRoom)
@@ -76,7 +76,7 @@ class PublicRoomController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\PublicRoomMessage $publicRoom
+     * @param  \App\Models\PublicRoomMessage $publicRoom
      * @return \Illuminate\Http\Response
      */
     public function destroy(PublicRoomMessage $publicRoom)

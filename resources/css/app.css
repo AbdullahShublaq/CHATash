@@ -2,6 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    html {
+        @apply bg-fixed bg-gradient-to-br from-indigo-100 via-slate-50 to-blue-100;
+    }
+
+    body {
+        @apply min-h-screen antialiased text-slate-800;
+    }
+
+    ::selection {
+        @apply bg-indigo-500 text-white;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-indigo-500/25 transition hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 active:scale-[.98] focus:outline-none focus:ring-2 focus:ring-indigo-500/40;
+    }
+
+    .btn-danger {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-rose-500 to-red-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-rose-500/25 transition hover:from-rose-600 hover:to-red-700 hover:shadow-lg active:scale-[.98] focus:outline-none focus:ring-2 focus:ring-rose-500/40;
+    }
+
+    .btn-ghost {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300/80 bg-white/70 px-5 py-2.5 text-sm font-semibold text-gray-700 shadow-sm backdrop-blur transition hover:border-blue-400 hover:text-blue-600 hover:shadow-md;
+    }
+
+    .card {
+        @apply rounded-2xl border border-white/60 bg-white/70 shadow-xl shadow-indigo-950/5 backdrop-blur-xl;
+    }
+
+    .card-header {
+        @apply bg-gradient-to-r from-blue-700 to-indigo-800 px-8 py-6;
+    }
+
+    .input {
+        @apply w-full rounded-xl border-gray-300/80 bg-white/70 px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 shadow-sm backdrop-blur transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30;
+    }
+
+    .badge {
+        @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold;
+    }
+}
+
 /* width */
 ::-webkit-scrollbar {
     width: 8px;
@@ -14,11 +58,11 @@
 }
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #cbd5e0;
+    background: #cbd5e1;
     border-radius: 100vh;
     border: 4px solid transparent;
 }
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: #a0aec0;
+    background: #94a3b8;
 }
