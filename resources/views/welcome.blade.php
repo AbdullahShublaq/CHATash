@@ -12,13 +12,39 @@
 
     <!-- Styles -->
     @vite(['resources/css/app.css'])
+    <script>
+        (function () {
+            var theme = localStorage.getItem('theme');
+            if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+    <script>
+        function toggleTheme() {
+            var root = document.documentElement;
+            root.classList.toggle('dark');
+            localStorage.setItem('theme', root.classList.contains('dark') ? 'dark' : 'light');
+        }
+    </script>
 </head>
 <body class="antialiased leading-none">
 <div class="relative min-h-screen flex items-center justify-center overflow-hidden px-6">
     <!-- decorative orbs -->
-    <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-indigo-300/40 blur-3xl"></div>
-    <div class="absolute top-1/3 -right-32 w-[28rem] h-[28rem] rounded-full bg-blue-300/40 blur-3xl"></div>
-    <div class="absolute -bottom-32 left-1/3 w-96 h-96 rounded-full bg-purple-300/30 blur-3xl"></div>
+    <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-indigo-300/40 dark:bg-indigo-700/25 blur-3xl"></div>
+    <div class="absolute top-1/3 -right-32 w-[28rem] h-[28rem] rounded-full bg-blue-300/40 dark:bg-blue-700/25 blur-3xl"></div>
+    <div class="absolute -bottom-32 left-1/3 w-96 h-96 rounded-full bg-purple-300/30 dark:bg-purple-700/20 blur-3xl"></div>
+
+    <button type="button" id="theme-toggle" title="Toggle dark/light theme"
+            onclick="toggleTheme()"
+            class="absolute top-5 right-5 inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-sm text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 dark:text-slate-300 dark:hover:text-indigo-300 dark:hover:bg-white/10 transition z-10">
+        <svg class="hidden dark:block w-5 h-5" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"></path>
+        </svg>
+        <svg class="block dark:hidden w-5 h-5" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"></path>
+        </svg>
+    </button>
 
     <div class="relative w-full max-w-md text-center">
         <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 shadow-lg shadow-indigo-500/30 mb-8">
@@ -35,7 +61,7 @@
             {{ config('app.name', 'Laravel') }}
         </h1>
 
-        <p class="mb-10 text-slate-600 text-lg font-sans leading-relaxed">
+        <p class="mb-10 text-slate-600 dark:text-slate-300 text-lg font-sans leading-relaxed">
             Enjoy chatting with your friends.
         </p>
 
@@ -45,7 +71,7 @@
                     {{ __('Home') }}
                 </a>
                 <a href="{{ route('logout') }}"
-                   class="inline-flex items-center justify-center px-8 py-3 rounded-full font-semibold text-rose-600 bg-white/80 border-2 border-rose-400 hover:bg-rose-50 backdrop-blur transition"
+                   class="inline-flex items-center justify-center px-8 py-3 rounded-full font-semibold text-rose-600 bg-white/80 border-2 border-rose-400 hover:bg-rose-50 dark:text-rose-400 dark:bg-slate-800/80 dark:border-rose-500 dark:hover:bg-slate-800 backdrop-blur transition"
                    onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
@@ -58,7 +84,7 @@
                     {{ __('Login') }}
                 </a>
                 @if (Route::has('register'))
-                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-8 py-3 rounded-full font-semibold text-blue-700 bg-white/80 border-2 border-blue-400 hover:bg-blue-50 backdrop-blur transition">
+                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-8 py-3 rounded-full font-semibold text-blue-700 bg-white/80 border-2 border-blue-400 hover:bg-blue-50 dark:text-blue-400 dark:bg-slate-800/80 dark:border-blue-500 dark:hover:bg-slate-800 backdrop-blur transition">
                         {{ __('Register') }}
                     </a>
                 @endif

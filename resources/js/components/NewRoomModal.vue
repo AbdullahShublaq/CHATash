@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="flex flex-wrap items-center justify-between gap-4 w-full">
-            <h2 class="text-slate-700 text-xl font-semibold">My PrivateRooms</h2>
+            <h2 class="text-slate-700 dark:text-slate-200 text-xl font-semibold">My PrivateRooms</h2>
             <button type="button" class="btn-primary" @click="show = true">Create room</button>
         </div>
 
@@ -9,11 +9,11 @@
             <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
                 <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" @click="show = false"></div>
                 <div class="relative card p-6 sm:p-10 w-full max-w-md my-auto">
-                    <h1 class="text-2xl font-normal mb-8 text-center text-slate-800">Let's Create PrivateRoom</h1>
+                    <h1 class="text-2xl font-normal mb-8 text-center text-slate-800 dark:text-white">Let's Create PrivateRoom</h1>
 
                     <form @submit.prevent="submit">
                         <div class="mb-6">
-                            <label for="name" class="text-sm text-slate-700 font-medium block mb-2">Room Name</label>
+                            <label for="name" class="text-sm text-slate-700 dark:text-slate-200 font-medium block mb-2">Room Name</label>
                             <input type="text" id="name"
                                    maxlength="15"
                                    class="input"

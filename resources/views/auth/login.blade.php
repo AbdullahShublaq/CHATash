@@ -12,7 +12,7 @@
                     @csrf
 
                     <div class="mb-6">
-                        <label for="email" class="block text-sm font-medium text-slate-700 mb-2">
+                        <label for="email" class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
                             {{ __('E-Mail Address') }}:
                         </label>
 
@@ -24,7 +24,7 @@
                     </div>
 
                     <div class="mb-6">
-                        <label for="password" class="block text-sm font-medium text-slate-700 mb-2">
+                        <label for="password" class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
                             {{ __('Password') }}:
                         </label>
 
@@ -36,8 +36,8 @@
                     </div>
 
                     <div class="flex items-center mb-6">
-                        <label class="inline-flex items-center text-sm text-slate-700" for="remember">
-                            <input type="checkbox" name="remember" id="remember" class="form-checkbox h-4 w-4 text-indigo-600 rounded border-gray-300" {{ old('remember') ? 'checked' : '' }}>
+                        <label class="inline-flex items-center text-sm text-slate-700 dark:text-slate-200" for="remember">
+                            <input type="checkbox" name="remember" id="remember" class="form-checkbox h-4 w-4 text-indigo-600 rounded border-gray-300 dark:border-gray-600" {{ old('remember') ? 'checked' : '' }}>
                             <span class="ml-2">{{ __('Remember Me') }}</span>
                         </label>
                     </div>
@@ -48,7 +48,7 @@
                         </button>
 
                         @if (Route::has('register'))
-                            <p class="text-sm text-center text-slate-600 mt-2">
+                            <p class="text-sm text-center text-slate-600 dark:text-slate-400 mt-2">
                                 {{ __("Don't have an account?") }}
                                 <a class="text-indigo-600 hover:text-indigo-800 font-medium" href="{{ route('register') }}">
                                     {{ __('Register') }}

@@ -21,7 +21,7 @@
                     @csrf
 
                     <div class="mb-6">
-                        <label for="email" class="block text-sm font-medium text-slate-700 mb-2">
+                        <label for="email" class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
                             {{ __('E-Mail Address') }}:
                         </label>
 
@@ -37,7 +37,7 @@
                             {{ __('Send Password Reset Link') }}
                         </button>
 
-                        <p class="text-sm text-center text-slate-600">
+                        <p class="text-sm text-center text-slate-600 dark:text-slate-400">
                             <a class="font-medium text-indigo-600 hover:text-indigo-800" href="{{ route('login') }}">
                                 {{ __('Back to login') }}
                             </a>

@@ -11,12 +11,12 @@
                 <form class="p-8" method="POST" action="{{ route('password.confirm') }}">
                     @csrf
 
-                    <p class="text-sm leading-relaxed text-slate-700">
+                    <p class="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
                         {{ __('Please confirm your password before continuing.') }}
                     </p>
 
                     <div class="my-6">
-                        <label for="password" class="block text-sm font-medium text-slate-700 mb-2">
+                        <label for="password" class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
                             {{ __('Password') }}:
                         </label>
 

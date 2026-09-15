@@ -12,7 +12,7 @@
                     @csrf
 
                     <div class="mb-6">
-                        <label for="name" class="block text-sm font-medium text-slate-700 mb-2">
+                        <label for="name" class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
                             {{ __('Name') }}:
                         </label>
 
@@ -24,7 +24,7 @@
                     </div>
 
                     <div class="mb-6">
-                        <label for="email" class="block text-sm font-medium text-slate-700 mb-2">
+                        <label for="email" class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
                             {{ __('E-Mail Address') }}:
                         </label>
 
@@ -36,7 +36,7 @@
                     </div>
 
                     <div class="mb-6">
-                        <label for="password" class="block text-sm font-medium text-slate-700 mb-2">
+                        <label for="password" class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
                             {{ __('Password') }}:
                         </label>
 
@@ -48,7 +48,7 @@
                     </div>
 
                     <div class="mb-6">
-                        <label for="password-confirm" class="block text-sm font-medium text-slate-700 mb-2">
+                        <label for="password-confirm" class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
                             {{ __('Confirm Password') }}:
                         </label>
 
@@ -60,7 +60,7 @@
                             {{ __('Register') }}
                         </button>
 
-                        <p class="text-sm text-center text-slate-600 mt-2">
+                        <p class="text-sm text-center text-slate-600 dark:text-slate-400 mt-2">
                             {{ __('Already have an account?') }}
                             <a class="text-indigo-600 hover:text-indigo-800 font-medium" href="{{ route('login') }}">
                                 {{ __('Login') }}

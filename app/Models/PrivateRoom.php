@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 class PrivateRoom extends Model
 {
-    use Sluggable;
+    use Sluggable, HasUuids;
     //
     protected $fillable = ['name', 'slug'];
     protected $appends = ['path', 'participants', 'participantsCount'];
@@ -30,7 +31,12 @@ class PrivateRoom extends Model
 
     public function path(): string
     {
-        return "/private/{$this->slug}";
+        return "/private/{$this->id}";
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'id';
     }
 
     public function owner(): \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -40,7 +46,8 @@ class PrivateRoom extends Model
 
     public function participants(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'private_room_participants');
+        return $this->belongsToMany(User::class, 'private_room_participants')
+            ->using(PrivateRoomParticipant::class);
     }
 
     public function messages(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

@@ -1,31 +1,31 @@
 <template>
-    <div class="flex flex-col bg-gradient-to-br from-indigo-100 via-slate-50 to-blue-100 h-[calc(100vh-56px)]">
+    <div class="flex flex-col bg-gradient-to-br from-indigo-100 via-slate-50 to-blue-100 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 h-[calc(100vh-56px)]">
         <div class="relative flex flex-1 min-h-0">
             <!-- Mobile drawer backdrop -->
             <div v-if="expandCurrent" class="absolute inset-0 z-20 bg-slate-900/50 md:hidden" @click="expandCurrent = false"></div>
 
             <!-- Sidebar -->
-            <aside :class="[expandCurrent ? 'flex' : 'hidden', 'md:flex absolute z-30 md:static inset-y-0 left-0 w-72 md:w-64 lg:w-72 flex-col bg-white/70 backdrop-blur-xl border-r border-white/60 shadow-2xl md:shadow-none']">
-                <div class="flex items-center justify-between px-4 py-4 border-b border-white/70 flex-shrink-0">
+            <aside :class="[expandCurrent ? 'flex' : 'hidden', 'md:flex absolute z-30 md:static inset-y-0 left-0 w-72 md:w-64 lg:w-72 flex-col bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-r border-white/60 dark:border-white/10 shadow-2xl md:shadow-none']">
+                <div class="flex items-center justify-between px-4 py-4 border-b border-white/70 dark:border-white/10 flex-shrink-0">
                     <div class="flex items-center">
                         <svg viewBox="0 0 16 16" color="#4f46e5" class="w-6 h-6 mr-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path>
                         </svg>
-                        <h1 class="text-lg font-semibold text-slate-800">
+                        <h1 class="text-lg font-semibold text-slate-800 dark:text-white">
                             Current
-                            <span v-text="participants.length" class="ml-2 inline-block rounded-full px-2 py-0.5 text-xs bg-indigo-100 text-indigo-700"></span>
+                            <span v-text="participants.length" class="ml-2 inline-block rounded-full px-2 py-0.5 text-xs bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300"></span>
                         </h1>
                     </div>
-                    <button type="button" class="md:hidden text-gray-500 hover:text-gray-700" @click="expandCurrent = false" aria-label="Close online list">
+                    <button type="button" class="md:hidden text-gray-500 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-200" @click="expandCurrent = false" aria-label="Close online list">
                         <svg viewBox="0 0 16 16" class="w-5 h-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>
                     </button>
                 </div>
 
                 <div class="flex-1 min-h-0 overflow-y-auto p-3">
-                    <div class="divide-y divide-gray-100">
-                        <div v-for="participant in participants" class="flex items-center py-2 px-2 rounded-lg hover:bg-white/70">
-                            <img class="w-9 h-9 rounded-full ring-2 ring-white" :src="participant.user.avatar" alt="avatar">
-                            <p class="ml-3 text-sm font-medium text-slate-800 truncate" v-text="participant.user.name"></p>
+                    <div class="divide-y divide-gray-100 dark:divide-white/10">
+                        <div v-for="participant in participants" class="flex items-center py-2 px-2 rounded-lg hover:bg-white/70 dark:hover:bg-white/10">
+                            <img class="w-9 h-9 rounded-full ring-2 ring-white dark:ring-slate-700" :src="participant.user.avatar" alt="avatar">
+                            <p class="ml-3 text-sm font-medium text-slate-800 dark:text-slate-100 truncate" v-text="participant.user.name"></p>
                         </div>
                     </div>
                 </div>
@@ -58,30 +58,30 @@
                         <div v-for="message in messages" :class="currentUser.id != message.user_id ? 'flex justify-start' : 'flex justify-end'">
                             <div class="flex items-end space-x-2 max-w-[85%] md:max-w-[70%]">
                                 <img v-if="currentUser.id != message.user_id" class="w-8 h-8 rounded-full flex-shrink-0 mb-1" :src="message.user_avatar" alt="avatar" :title="message.user_name">
-                                <div :class="currentUser.id != message.user_id ? 'bg-white/80 backdrop-blur border border-white/70 rounded-2xl rounded-bl-md' : 'bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl rounded-br-md'" class="px-4 py-2 shadow-md">
-                                    <p v-if="currentUser.id != message.user_id" class="text-xs font-medium text-indigo-600 mb-0.5" v-text="message.user_name"></p>
-                                    <p v-text="message.message" :class="currentUser.id == message.user_id ? 'text-white' : 'text-gray-800'" class="leading-relaxed text-sm break-words"></p>
+                                <div :class="currentUser.id != message.user_id ? 'bg-white/80 dark:bg-slate-800/80 backdrop-blur border border-white/70 dark:border-white/10 rounded-2xl rounded-bl-md' : 'bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl rounded-br-md'" class="px-4 py-2 shadow-md">
+                                    <p v-if="currentUser.id != message.user_id" class="text-xs font-medium text-indigo-600 dark:text-indigo-400 mb-0.5" v-text="message.user_name"></p>
+                                    <p v-text="message.message" :class="currentUser.id == message.user_id ? 'text-white' : 'text-gray-800 dark:text-slate-100'" class="leading-relaxed text-sm break-words"></p>
                                     <span v-text="message.time" :class="currentUser.id == message.user_id ? 'text-blue-100' : 'text-gray-400'" class="text-xs font-normal"></span>
                                 </div>
                             </div>
                         </div>
                         <div v-if="activePeer" class="flex justify-start items-center">
                             <img class="w-8 h-8 rounded-full mr-2" :src="activePeer.user.avatar" alt="avatar" :title="activePeer.user.name">
-                            <div class="bg-white/80 backdrop-blur border border-white/70 rounded-2xl rounded-bl-md px-4 py-2 shadow-md flex items-center">
-                                <span class="text-xs font-semibold text-gray-600 mr-1" v-text="activePeer.user.name"></span>
-                                <span class="text-xs text-gray-500">is typing</span>
+                            <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur border border-white/70 dark:border-white/10 rounded-2xl rounded-bl-md px-4 py-2 shadow-md flex items-center">
+                                <span class="text-xs font-semibold text-gray-600 dark:text-slate-200 mr-1" v-text="activePeer.user.name"></span>
+                                <span class="text-xs text-gray-500 dark:text-slate-300">is typing</span>
                                 <span class="flex space-x-0.5 ml-2">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce" style="animation-delay: 0s"></span>
-                                    <span class="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce" style="animation-delay: 0.15s"></span>
-                                    <span class="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce" style="animation-delay: 0.3s"></span>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-slate-300 animate-bounce" style="animation-delay: 0s"></span>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-slate-300 animate-bounce" style="animation-delay: 0.15s"></span>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-slate-300 animate-bounce" style="animation-delay: 0.3s"></span>
                                 </span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <footer class="flex items-center bg-white/70 backdrop-blur-xl border-t border-white/60 px-4 py-3 flex-shrink-0">
-                    <input v-model="newMessage" @keyup.enter="addMessage" @keydown="tagPeers" class="form-input flex-1 min-w-0 rounded-full border-gray-300/80 bg-white/80 px-4 py-2 text-sm text-gray-800 placeholder-gray-400 shadow-sm backdrop-blur focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30" placeholder="Type your message...">
+                <footer class="flex items-center bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-t border-white/60 dark:border-white/10 px-4 py-3 flex-shrink-0">
+                    <input v-model="newMessage" @keyup.enter="addMessage" @keydown="tagPeers" class="form-input flex-1 min-w-0 rounded-full border-gray-300/80 dark:border-white/10 bg-white/80 dark:bg-slate-800/60 px-4 py-2 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 shadow-sm backdrop-blur focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30 dark:focus:ring-indigo-400/30" placeholder="Type your message...">
                     <button @click="addMessage" class="flex items-center rounded-full text-white text-sm font-semibold ml-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 px-5 py-2 shadow-md shadow-indigo-500/25 transition flex-shrink-0">
                         Send
                         <svg viewBox="0 0 16 16" class="ml-1 w-3.5 h-3.5" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -124,7 +124,8 @@ onMounted(() => {
         })
         .listen('PublicRoomMessageCreated', ({message}) => {
             messages.value.push(message)
-            if (message.user_id !== currentUser.id) playReceive();
+            if (message.user_id === currentUser.id) playSend();
+            else playReceive();
         })
         .listenForWhisper('typing', flashActivePeer);
 });
@@ -147,7 +148,6 @@ function addMessage() {
             message: newMessage.value
         });
 
-        playSend();
         newMessage.value = '';
     }
 }

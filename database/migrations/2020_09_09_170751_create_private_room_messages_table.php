@@ -14,9 +14,9 @@ class CreatePrivateRoomMessagesTable extends Migration
     public function up(): void
     {
         Schema::create('private_room_messages', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('private_room_id');
-            $table->unsignedBigInteger('user_id');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('private_room_id');
+            $table->foreignUuid('user_id');
             $table->text('message');
             $table->timestamps();
 

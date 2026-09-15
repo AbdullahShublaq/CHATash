@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class PrivateRoomParticipant extends Model
+class PrivateRoomParticipant extends Pivot
 {
-    //
+    use HasUuids;
     protected $fillable = ['user_id', 'private_room_id'];
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo

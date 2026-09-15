@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         Route::bind('private', function ($value) {
-            return PrivateRoom::where('slug', $value)->firstOrFail();
+            return PrivateRoom::findOrFail($value);
         });
     }
 }

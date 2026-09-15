@@ -8,7 +8,7 @@
         </div>
 
         <div v-show="isOpen"
-             class="dropdown-menu absolute top-full mt-2 py-1.5 min-w-[10rem] rounded-xl bg-white/80 backdrop-blur-xl border border-white/60 shadow-xl shadow-indigo-950/10 z-50"
+             class="dropdown-menu absolute top-full mt-2 py-1.5 min-w-[10rem] rounded-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-xl shadow-indigo-950/10 dark:shadow-black/40 z-50"
              :class="align === 'left' ? 'left-0' : 'right-0'"
              :style="{ width }">
             <slot></slot>

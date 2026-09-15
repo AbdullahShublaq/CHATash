@@ -18,11 +18,11 @@
                 </div>
 
                 <div class="p-8">
-                    <p class="text-sm leading-relaxed text-slate-700">
+                    <p class="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
                         {{ __('Before proceeding, please check your email for a verification link.') }}
                     </p>
 
-                    <p class="text-sm leading-relaxed text-slate-700 mt-6">
+                    <p class="text-sm leading-relaxed text-slate-700 dark:text-slate-300 mt-6">
                         {{ __('If you did not receive the email') }},
                         <a class="font-medium text-indigo-600 hover:text-indigo-800 cursor-pointer" onclick="event.preventDefault(); document.getElementById('resend-verification-form').submit();">{{ __('click here to request another') }}</a>.
                     </p>

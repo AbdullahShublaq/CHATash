@@ -14,8 +14,8 @@ class CreatePrivateRoomsTable extends Migration
     public function up(): void
     {
         Schema::create('private_rooms', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('owner_id');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('owner_id');
             $table->string('name');
             $table->string('slug')->unique();
             $table->timestamps();

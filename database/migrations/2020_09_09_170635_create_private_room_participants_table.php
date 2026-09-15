@@ -14,9 +14,9 @@ class CreatePrivateRoomParticipantsTable extends Migration
     public function up(): void
     {
         Schema::create('private_room_participants', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('private_room_id');
-            $table->unsignedBigInteger('user_id');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('private_room_id');
+            $table->foreignUuid('user_id');
             $table->timestamps();
 
             $table->foreign('private_room_id')->references('id')->on('private_rooms')->onDelete('cascade');

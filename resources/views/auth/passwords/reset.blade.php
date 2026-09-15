@@ -14,7 +14,7 @@
                     <input type="hidden" name="token" value="{{ $token }}">
 
                     <div class="mb-6">
-                        <label for="email" class="block text-sm font-medium text-slate-700 mb-2">
+                        <label for="email" class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
                             {{ __('E-Mail Address') }}:
                         </label>
 
@@ -26,7 +26,7 @@
                     </div>
 
                     <div class="mb-6">
-                        <label for="password" class="block text-sm font-medium text-slate-700 mb-2">
+                        <label for="password" class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
                             {{ __('Password') }}:
                         </label>
 
@@ -38,7 +38,7 @@
                     </div>
 
                     <div class="mb-6">
-                        <label for="password-confirm" class="block text-sm font-medium text-slate-700 mb-2">
+                        <label for="password-confirm" class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
                             {{ __('Confirm Password') }}:
                         </label>
 

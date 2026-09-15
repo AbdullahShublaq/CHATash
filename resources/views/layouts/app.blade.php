@@ -21,14 +21,29 @@
     <script>
         window.App = <?= json_encode(['user' => $appUser], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
     </script>
+    <script>
+        (function () {
+            var theme = localStorage.getItem('theme');
+            if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+    <script>
+        function toggleTheme() {
+            var root = document.documentElement;
+            root.classList.toggle('dark');
+            localStorage.setItem('theme', root.classList.contains('dark') ? 'dark' : 'light');
+        }
+    </script>
 </head>
 <body class="min-h-screen antialiased leading-none">
 <div id="app">
-    <nav id="nav" class="sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-white/60 shadow-sm py-3">
+    <nav id="nav" class="sticky top-0 z-40 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-b border-white/60 dark:border-white/10 shadow-sm py-3">
         <div class="mx-auto px-6 md:px-0">
             <div class="flex items-center justify-center">
                 <div class="mr-6 ml-8">
-                    <a href="{{ url('/') }}" class="flex text-lg font-semibold text-slate-800 no-underline">
+                    <a href="{{ url('/') }}" class="flex text-lg font-semibold text-slate-800 dark:text-white no-underline">
                         {{ config('app.name', 'Laravel') }}
                         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chat-quote ml-1 text-indigo-600" fill="currentColor"
                              xmlns="http://www.w3.org/2000/svg">
@@ -43,30 +58,40 @@
                         </svg>
                     </a>
                 </div>
-                <div class="flex-1 text-right mr-4">
+                <div class="flex-1 mr-4 flex items-center justify-end gap-3">
+                    <button type="button" id="theme-toggle" title="Toggle dark/light theme"
+                            onclick="toggleTheme()"
+                            class="inline-flex items-center justify-center align-middle w-9 h-9 rounded-full text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 dark:text-slate-300 dark:hover:text-indigo-300 dark:hover:bg-white/10 transition">
+                        <svg class="hidden dark:block w-5 h-5" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"></path>
+                        </svg>
+                        <svg class="block dark:hidden w-5 h-5" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"></path>
+                        </svg>
+                    </button>
                     @guest
-                        <a class="no-underline hover:text-indigo-600 text-slate-600 text-sm font-medium p-3 transition"
+                        <a class="no-underline hover:text-indigo-600 text-slate-600 dark:text-slate-300 dark:hover:text-indigo-400 text-sm font-medium p-3 transition"
                            href="{{ route('login') }}">{{ __('Login') }}</a>
                         @if (Route::has('register'))
-                            <a class="no-underline hover:text-indigo-600 text-slate-600 text-sm font-medium p-3 transition"
+                            <a class="no-underline hover:text-indigo-600 text-slate-600 dark:text-slate-300 dark:hover:text-indigo-400 text-sm font-medium p-3 transition"
                                href="{{ route('register') }}">{{ __('Register') }}</a>
                         @endif
                     @else
-                        <div class="flex justify-end">
+                        <div class="flex items-center">
                             <dropdown align="right" width="">
                                 <template v-slot:trigger>
                                     <div class="flex justify-end items-center">
                                         <img class="w-8 h-8 rounded-full ring-2 ring-indigo-200 shadow"
                                              src="https://ui-avatars.com/api/?name={{urlencode(Auth::user()->name)}}&amp;background=random&amp;color=fff"
                                              alt="avatar">
-                                        <span class="text-slate-700 text-sm font-medium pr-4 ml-2">
+                                        <span class="text-slate-700 dark:text-slate-200 text-sm font-medium pr-4 ml-2">
                                         {{ Auth::user()->name }}
                                         </span>
                                     </div>
                                 </template>
 
                                 <a href="{{ route('logout') }}"
-                                   class="block px-4 py-2 text-sm font-medium text-slate-700 no-underline hover:bg-indigo-50 hover:text-indigo-700 transition"
+                                   class="block px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 no-underline hover:bg-indigo-50 dark:hover:bg-white/10 dark:hover:text-indigo-300 hover:text-indigo-700 transition"
                                    onclick="event.preventDefault();
                                         document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">

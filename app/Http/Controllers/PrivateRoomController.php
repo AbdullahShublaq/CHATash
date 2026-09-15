@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\PrivateRoom;
 use App\Models\PrivateRoomParticipant;
 use App\Models\User;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -14,7 +16,7 @@ class PrivateRoomController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Factory|View|\Illuminate\View\View
      */
     public function index()
     {
@@ -85,7 +87,7 @@ class PrivateRoomController extends Controller
      * Display the specified resource.
      *
      * @param \App\Models\PrivateRoom $privateRoom
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(PrivateRoom $privateRoom)
