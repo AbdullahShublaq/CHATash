@@ -10,13 +10,16 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script>
-        window.App = @json(['user' => [
+    @php
+        $appUser = auth()->user() ? [
             'id' => auth()->user()->id,
             'name' => auth()->user()->name,
             'email' => auth()->user()->email,
             'avatar' => auth()->user()->avatar,
-        ]]);
+        ] : null;
+    @endphp
+    <script>
+        window.App = <?= json_encode(['user' => $appUser], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
     </script>
 </head>
 <body class="bg-gray-100 h-screen antialiased leading-none">

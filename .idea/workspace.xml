@@ -4,20 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c74e221-e277-481d-8a31-a9c6318729bb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/CHATash.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CHATash.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+    <list default="true" id="3c74e221-e277-481d-8a31-a9c6318729bb" name="Default Changelist" comment="fix styles and small bugs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/PrivateRoom.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/PrivateRoom.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/PrivateRoomMessage.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/PrivateRoomMessage.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/PrivateRoomParticipant.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/PrivateRoomParticipant.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/PublicRoomMessage.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/PublicRoomMessage.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/seeders/DatabaseSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeders/DatabaseSeeder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/privateRoom.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/privateRoom.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/publicRoom.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/publicRoom.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/auth/login.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/auth/login.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -399,6 +388,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "git-widget-placeholder": "laravel-upgrade",
     "junie.onboarding.icon.badge.shown": "true",
@@ -456,8 +446,17 @@
       <workItem from="1600177293701" duration="11311000" />
       <workItem from="1600244298153" duration="10025000" />
       <workItem from="1600350367833" duration="3754000" />
-      <workItem from="1789331355861" duration="1007000" />
+      <workItem from="1789331355861" duration="1838000" />
     </task>
+    <task id="LOCAL-00001" summary="fix styles and small bugs">
+      <option name="closed" value="true" />
+      <created>1789332542348</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1789332542348</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -546,6 +545,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="fix styles and small bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix styles and small bugs" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/resources/js/components/publicRoom/Current.vue" />
