@@ -97,6 +97,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUpdated, onUnmounted } from 'vue';
+import { playSend, playReceive, playTyping } from '../sounds';
 
 const messages = ref([]);
 const newMessage = ref('');
@@ -123,6 +124,7 @@ onMounted(() => {
         })
         .listen('PublicRoomMessageCreated', ({message}) => {
             messages.value.push(message)
+            if (message.user_id !== currentUser.id) playReceive();
         })
         .listenForWhisper('typing', flashActivePeer);
 });
@@ -145,6 +147,7 @@ function addMessage() {
             message: newMessage.value
         });
 
+        playSend();
         newMessage.value = '';
     }
 }
@@ -157,6 +160,8 @@ function tagPeers() {
 
 function flashActivePeer(e) {
     activePeer.value = e;
+
+    if (e.user.id !== currentUser.id) playTyping();
 
     if (typingTimer) clearTimeout(typingTimer);
 

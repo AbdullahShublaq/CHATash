@@ -14,7 +14,7 @@ class PublicRoomMessageCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public String $message;
+    public $message;
 
     /**
      * Create a new event instance.
