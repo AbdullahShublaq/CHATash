@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\PrivateRoomMessageCreated;
 use App\Events\PrivateRoomMessageDeleted;
 use App\Http\Resources\MessageResource;
+use App\Models\PrivateRoom;
 use App\Models\PrivateRoomMessage;
 use Illuminate\Http\Request;
 
@@ -20,6 +21,13 @@ class PrivateRoomMessagesController extends Controller
     public function index(Request $request)
     {
         //
+        $data = $request->validate([
+            'private_room_id' => 'required|exists:private_rooms,id'
+        ]);
+
+        $room = PrivateRoom::findOrFail($data['private_room_id']);
+        $this->ensureUserCanAccessRoom($room);
+
         $result = [];
         $data = PrivateRoomMessage::where('private_room_id', $request->private_room_id)->with('user')->get();
         foreach ($data as $row) {
@@ -50,10 +58,12 @@ class PrivateRoomMessagesController extends Controller
         //
         $data = $request->validate([
             'private_room_id' => 'required|exists:private_rooms,id',
-            'user_id' => 'required|exists:users,id',
             'message' => 'required|string',
             'reply_to_id' => 'nullable|exists:private_room_messages,id'
         ]);
+
+        $room = PrivateRoom::findOrFail($data['private_room_id']);
+        $this->ensureUserCanAccessRoom($room);
 
         $replyTo = null;
         if (!empty($data['reply_to_id'])) {
@@ -66,8 +76,8 @@ class PrivateRoomMessagesController extends Controller
         }
 
         $message = PrivateRoomMessage::create([
-            'private_room_id' => $data['private_room_id'],
-            'user_id' => $data['user_id'],
+            'private_room_id' => $room->id,
+            'user_id' => auth()->id(),
             'message' => $data['message'],
             'reply_to_id' => $data['reply_to_id'] ?? null,
             'reply_to' => $replyTo,
@@ -121,6 +131,8 @@ class PrivateRoomMessagesController extends Controller
         //
         $message = PrivateRoomMessage::findOrFail($id);
 
+        $this->ensureUserCanAccessRoom($message->private_room);
+
         if ($message->user_id !== auth()->id() && !auth()->user()->is_admin) {
             abort(403, 'You are not allowed to delete this message.');
         }
@@ -128,5 +140,12 @@ class PrivateRoomMessagesController extends Controller
         $message->delete();
 
         event(new PrivateRoomMessageDeleted($message->id, $message->private_room_id));
+    }
+
+    private function ensureUserCanAccessRoom(PrivateRoom $room): void
+    {
+        if (!auth()->user()->accessiblePrivateRooms()->contains('id', $room->id)) {
+            abort(403, 'You are not allowed to access this room.');
+        }
     }
 }

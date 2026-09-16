@@ -48,7 +48,6 @@ class PublicRoomMessagesController extends Controller
     {
         //
         $data = $request->validate([
-            'user_id' => 'required|exists:users,id',
             'message' => 'required|string',
             'reply_to_id' => 'nullable|exists:public_room_messages,id'
         ]);
@@ -64,7 +63,7 @@ class PublicRoomMessagesController extends Controller
         }
 
         $message = PublicRoomMessage::create([
-            'user_id' => $data['user_id'],
+            'user_id' => auth()->id(),
             'message' => $data['message'],
             'reply_to_id' => $data['reply_to_id'] ?? null,
             'reply_to' => $replyTo,

@@ -70,6 +70,12 @@ class PrivateRoomController extends Controller
             'email' => 'required|string|email|exists:users,email',
         ]);
 
+        $room = PrivateRoom::findOrFail($data['private_room_id']);
+
+        if (!auth()->user()->accessiblePrivateRooms()->contains('id', $room->id)) {
+            abort(403, 'You are not allowed to add participants to this room.');
+        }
+
         $user = User::where('email', $data['email'])->first();
 
         $userFound = PrivateRoomParticipant::where('private_room_id', $data['private_room_id'])->where('user_id', $user->id)->first();
@@ -77,7 +83,6 @@ class PrivateRoomController extends Controller
             throw ValidationException::withMessages(['email' => 'A user with this email already in this room']);
         }
 
-        $room = PrivateRoom::where('id', $data['private_room_id'])->first();
         $room->participants()->attach($user);
 
         return $user;

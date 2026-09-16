@@ -4,16 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c74e221-e277-481d-8a31-a9c6318729bb" name="Default Changelist" comment="ignore .idea">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="3c74e221-e277-481d-8a31-a9c6318729bb" name="Default Changelist" comment="delete message and set admin role">
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/PrivateRoomMessagesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/PrivateRoomMessagesController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/PublicRoomMessagesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/PublicRoomMessagesController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Resources/MessageResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/MessageResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/PrivateRoomMessage.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/PrivateRoomMessage.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/PublicRoomMessage.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/PublicRoomMessage.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/User.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Policies/PrivateRoomPolicy.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Policies/PrivateRoomPolicy.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/css/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/resources/css/app.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/components/Dropdown.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Dropdown.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/components/privateRoom.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/privateRoom.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/components/publicRoom.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/publicRoom.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/home.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/home.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/rooms/private/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/rooms/private/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/welcome.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/welcome.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/channels.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/channels.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -404,6 +411,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "project.settings.perforce.mcp",
     "to.speed.mode.migration.done": "true",
     "ts.external.directory.path": "C:\\Program Files\\JetBrains\\PhpStorm 2025.2.4\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
@@ -454,7 +462,7 @@
       <workItem from="1600177293701" duration="11311000" />
       <workItem from="1600244298153" duration="10025000" />
       <workItem from="1600350367833" duration="3754000" />
-      <workItem from="1789331355861" duration="7258000" />
+      <workItem from="1789331355861" duration="8363000" />
     </task>
     <task id="LOCAL-00001" summary="fix styles and small bugs">
       <option name="closed" value="true" />
@@ -496,7 +504,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789504995178</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="delete message and set admin role">
+      <option name="closed" value="true" />
+      <created>1789587521555</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1789587521555</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -592,7 +608,8 @@
     <MESSAGE value="add sounds effect to messages" />
     <MESSAGE value="add uuid, and dark theme" />
     <MESSAGE value="ignore .idea" />
-    <option name="LAST_COMMIT_MESSAGE" value="ignore .idea" />
+    <MESSAGE value="delete message and set admin role" />
+    <option name="LAST_COMMIT_MESSAGE" value="delete message and set admin role" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/resources/js/components/publicRoom/Current.vue" />
