@@ -71,7 +71,7 @@
                                     <p v-text="message.message" :class="currentUser.id == message.user_id ? 'text-white' : 'text-gray-800 dark:text-slate-100'" class="leading-relaxed text-sm break-words"></p>
                                     <span v-text="message.time" :class="currentUser.id == message.user_id ? 'text-blue-100' : 'text-gray-400'" class="text-xs font-normal"></span>
                                 </div>
-                                <dropdown v-if="(message.user_id == currentUser.id || currentUser.is_admin) && message.id"
+                                <dropdown v-if="message.id"
                                           :align="currentUser.id == message.user_id ? 'right' : 'left'">
                                     <template v-slot:trigger>
                                         <button type="button"
@@ -90,7 +90,7 @@
                                         </svg>
                                         Reply
                                     </button>
-                                    <button type="button" @click="deleteMessage(message)"
+                                    <button v-if="message.user_id == currentUser.id || currentUser.is_admin" type="button" @click="deleteMessage(message)"
                                             class="flex items-center w-full px-4 py-2 text-sm font-medium text-rose-600 dark:text-rose-400 no-underline hover:bg-rose-50 dark:hover:bg-rose-500/10 transition text-left">
                                         <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 mr-2 flex-shrink-0" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
@@ -142,7 +142,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUpdated, onUnmounted } from 'vue';
+import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue';
 import { playSend, playReceive, playTyping } from '../sounds';
 
 const messages = ref([]);
@@ -154,11 +154,19 @@ const participants = ref([]);
 const expandCurrent = ref(false);
 const replyTo = ref(null);
 const messageInput = ref(null);
+const scrolledUp = ref(false);
+const forceScroll = ref(false);
 
 const channel = computed(() => window.Echo.join('messages'));
 
 onMounted(() => {
-    axios.get('/public/messages').then(response => (messages.value = response.data));
+    const container = document.getElementById("room-messages");
+    if (container) container.addEventListener('scroll', handleMessagesScroll);
+
+    axios.get('/public/messages').then(response => {
+        messages.value = response.data;
+        scrollMessagesToBottom();
+    });
 
     channel.value
         .here(users => {
@@ -181,13 +189,20 @@ onMounted(() => {
         .listenForWhisper('typing', flashActivePeer);
 });
 
-onUpdated(() => {
-    const container = document.getElementById("room-messages");
-    if (container) container.scrollTop = container.scrollHeight;
+watch(messages, () => {
+    nextTick(() => {
+        if (forceScroll.value || !scrolledUp.value) {
+            scrollMessagesToBottom();
+        }
+        forceScroll.value = false;
+    });
 });
 
 onUnmounted(() => {
     if (typingTimer) clearTimeout(typingTimer);
+
+    const container = document.getElementById("room-messages");
+    if (container) container.removeEventListener('scroll', handleMessagesScroll);
 });
 
 function addMessage() {
@@ -200,9 +215,22 @@ function addMessage() {
             reply_to_id: replyTo.value ? replyTo.value.id : null
         });
 
+        forceScroll.value = true;
         newMessage.value = '';
         replyTo.value = null;
     }
+}
+
+function handleMessagesScroll() {
+    const container = document.getElementById("room-messages");
+    if (!container) return;
+    scrolledUp.value = container.scrollHeight - container.scrollTop - container.clientHeight > 80;
+}
+
+function scrollMessagesToBottom() {
+    const container = document.getElementById("room-messages");
+    if (!container) return;
+    container.scrollTop = container.scrollHeight;
 }
 
 function setReply(message) {
