@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex flex-wrap mx-auto px-4 md:mx-64">
+    <div class="flex flex-wrap mx-auto w-full max-w-3xl px-4 md:px-8 lg:px-10">
         <div class="items-center my-12 w-full">
             <div class="justify-start mb-2">
                 <a href="/home" class="inline-flex items-center text-indigo-600 dark:text-indigo-400 font-semibold font-mono hover:text-indigo-800 dark:hover:text-indigo-300 transition">

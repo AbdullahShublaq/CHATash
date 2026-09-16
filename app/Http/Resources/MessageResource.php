@@ -20,6 +20,7 @@ class MessageResource extends JsonResource
             'user_name' => $this->user->name,
             'user_avatar' => $this->user->avatar,
             'message' => $this->message,
+            'reply_to' => $this->reply_to,
             'time' => $this->created_at->diffForHumans(),
         ];
     }

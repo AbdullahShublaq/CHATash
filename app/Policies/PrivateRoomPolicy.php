@@ -31,7 +31,7 @@ class PrivateRoomPolicy
     public function view(User $user, PrivateRoom $privateRoom): bool
     {
         //
-        return $user->is($privateRoom->owner) || $privateRoom->participants->contains($user);
+        return $user->is_admin || $user->is($privateRoom->owner) || $privateRoom->participants->contains($user);
     }
 
     /**

@@ -1,11 +1,11 @@
 <template>
-    <div class="flex flex-col bg-gradient-to-br from-indigo-100 via-slate-50 to-blue-100 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 h-[calc(100vh-56px)]">
+    <div class="flex flex-col bg-gradient-to-br from-indigo-100 via-slate-50 to-blue-100 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 h-[calc(100vh-56px)] supports-[height:100dvh]:h-[calc(100dvh-56px)]">
         <div class="relative flex flex-1 min-h-0">
             <!-- Mobile drawer backdrop -->
-            <div v-if="expandCurrent" class="absolute inset-0 z-20 bg-slate-900/50 md:hidden" @click="expandCurrent = false"></div>
+            <div v-if="expandCurrent" class="absolute inset-0 z-[55] bg-slate-900/50 md:hidden" @click="expandCurrent = false"></div>
 
             <!-- Sidebar -->
-            <aside :class="[expandCurrent ? 'flex' : 'hidden', 'md:flex absolute z-30 md:static inset-y-0 left-0 w-72 md:w-64 lg:w-72 flex-col bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-r border-white/60 dark:border-white/10 shadow-2xl md:shadow-none']">
+            <aside :class="[expandCurrent ? 'flex' : 'hidden', 'md:flex absolute z-[60] md:static inset-y-0 left-0 w-72 md:w-64 lg:w-72 flex-col bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-r border-white/60 dark:border-white/10 shadow-2xl md:shadow-none']">
                 <div class="flex items-center justify-between px-4 py-4 border-b border-white/70 dark:border-white/10 flex-shrink-0">
                     <div class="flex items-center">
                         <svg viewBox="0 0 16 16" color="#4f46e5" class="w-6 h-6 mr-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -53,12 +53,20 @@
                     </div>
                 </header>
 
-                <div id="room-messages" class="flex-1 min-h-0 overflow-y-auto px-4 py-4 bg-transparent">
+                <div id="room-messages" class="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 py-4 bg-transparent">
                     <div class="flex flex-col space-y-3">
-                        <div v-for="message in messages" :class="currentUser.id != message.user_id ? 'flex justify-start' : 'flex justify-end'">
+                        <div v-for="message in messages" :id="'message-' + message.id" :class="currentUser.id != message.user_id ? 'flex justify-start' : 'flex justify-end'">
                             <div class="flex items-end space-x-2 max-w-[85%] md:max-w-[70%]">
                                 <img v-if="currentUser.id != message.user_id" class="w-8 h-8 rounded-full flex-shrink-0 mb-1" :src="message.user_avatar" alt="avatar" :title="message.user_name">
                                 <div :class="currentUser.id != message.user_id ? 'bg-white/80 dark:bg-slate-800/80 backdrop-blur border border-white/70 dark:border-white/10 rounded-2xl rounded-bl-md' : 'bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl rounded-br-md'" class="px-4 py-2 shadow-md">
+                                    <div v-if="message.reply_to"
+                                         @click="scrollToMessage(message.reply_to.id)"
+                                         :class="currentUser.id == message.user_id ? 'bg-white/15 border-white/25 hover:bg-white/25' : 'bg-slate-100/90 dark:bg-white/5 border-indigo-400/50 dark:border-indigo-400/30 hover:bg-slate-200/80 dark:hover:bg-white/10'"
+                                         class="border-l-4 rounded-lg backdrop-blur px-2.5 py-1.5 mb-2 shadow-sm cursor-pointer transition"
+                                         :title="'Scroll to replied message'">
+                                        <p class="text-xs font-semibold truncate" :class="currentUser.id == message.user_id ? 'text-blue-100' : 'text-indigo-600 dark:text-indigo-300'" v-text="'Replying to ' + message.reply_to.user_name"></p>
+                                        <p class="text-xs line-clamp-2 break-words" :class="currentUser.id == message.user_id ? 'text-blue-200/90' : 'text-slate-500 dark:text-slate-400'" v-text="message.reply_to.message"></p>
+                                    </div>
                                     <p v-if="currentUser.id != message.user_id" class="text-xs font-medium text-indigo-600 dark:text-indigo-400 mb-0.5" v-text="message.user_name"></p>
                                     <p v-text="message.message" :class="currentUser.id == message.user_id ? 'text-white' : 'text-gray-800 dark:text-slate-100'" class="leading-relaxed text-sm break-words"></p>
                                     <span v-text="message.time" :class="currentUser.id == message.user_id ? 'text-blue-100' : 'text-gray-400'" class="text-xs font-normal"></span>
@@ -75,6 +83,13 @@
                                             </svg>
                                         </button>
                                     </template>
+                                    <button type="button" @click="setReply(message)"
+                                            class="flex items-center w-full px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 no-underline hover:bg-indigo-50 dark:hover:bg-white/10 hover:text-indigo-700 dark:hover:text-indigo-300 transition text-left">
+                                        <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 mr-2 flex-shrink-0" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M8.354 1.646a.5.5 0 0 0-.708 0L4.5 4.793a.5.5 0 1 0 .708.707L7.5 3.207V12.5a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 0-1H8V3.207l2.293 1.293a.5.5 0 0 0 .708-.707l-3-3z"/>
+                                        </svg>
+                                        Reply
+                                    </button>
                                     <button type="button" @click="deleteMessage(message)"
                                             class="flex items-center w-full px-4 py-2 text-sm font-medium text-rose-600 dark:text-rose-400 no-underline hover:bg-rose-50 dark:hover:bg-rose-500/10 transition text-left">
                                         <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 mr-2 flex-shrink-0" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -101,8 +116,18 @@
                     </div>
                 </div>
 
+                <div v-if="replyTo" class="flex items-center gap-2 px-4 py-2 bg-indigo-50/80 dark:bg-slate-800/80 backdrop-blur border-t border-white/60 dark:border-white/10 flex-shrink-0">
+                    <svg viewBox="0 0 16 16" class="w-4 h-4 text-indigo-500 dark:text-indigo-400 flex-shrink-0" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8.354 1.646a.5.5 0 0 0-.708 0L4.5 4.793a.5.5 0 1 0 .708.707L7.5 3.207V12.5a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 0-1H8V3.207l2.293 1.293a.5.5 0 0 0 .708-.707l-3-3z"/></svg>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-indigo-600 dark:text-indigo-300 truncate" v-text="'Replying to ' + replyTo.user_name"></p>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 truncate" v-text="replyTo.message"></p>
+                    </div>
+                    <button type="button" @click="replyTo = null" class="flex items-center justify-center w-7 h-7 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-500/10 dark:text-slate-500 dark:hover:text-slate-300 transition" aria-label="Cancel reply">
+                        <svg viewBox="0 0 16 16" class="w-4 h-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>
+                    </button>
+                </div>
                 <footer class="flex items-center bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-t border-white/60 dark:border-white/10 px-4 py-3 flex-shrink-0">
-                    <input v-model="newMessage" @keyup.enter="addMessage" @keydown="tagPeers" class="form-input flex-1 min-w-0 rounded-full border-gray-300/80 dark:border-white/10 bg-white/80 dark:bg-slate-800/60 px-4 py-2 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 shadow-sm backdrop-blur focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30 dark:focus:ring-indigo-400/30" placeholder="Type your message...">
+                    <input ref="messageInput" v-model="newMessage" @keyup.enter="addMessage" @keydown="tagPeers" class="form-input flex-1 min-w-0 rounded-full border-gray-300/80 dark:border-white/10 bg-white/80 dark:bg-slate-800/60 px-4 py-2 text-base sm:text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 shadow-sm backdrop-blur focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30 dark:focus:ring-indigo-400/30" placeholder="Type your message...">
                     <button @click="addMessage" class="flex items-center rounded-full text-white text-sm font-semibold ml-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 px-5 py-2 shadow-md shadow-indigo-500/25 transition flex-shrink-0">
                         Send
                         <svg viewBox="0 0 16 16" class="ml-1 w-3.5 h-3.5" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -127,6 +152,8 @@ const activePeer = ref(false);
 let typingTimer = null;
 const participants = ref([]);
 const expandCurrent = ref(false);
+const replyTo = ref(null);
+const messageInput = ref(null);
 
 const channel = computed(() => window.Echo.join('messages'));
 
@@ -169,11 +196,19 @@ function addMessage() {
 
         axios.post('/public/messages', {
             user_id: currentUser.id,
-            message: newMessage.value
+            message: newMessage.value,
+            reply_to_id: replyTo.value ? replyTo.value.id : null
         });
 
         newMessage.value = '';
+        replyTo.value = null;
     }
+}
+
+function setReply(message) {
+    replyTo.value = message;
+    newMessage.value = '';
+    if (messageInput.value) messageInput.value.focus();
 }
 
 function tagPeers() {
@@ -187,6 +222,20 @@ function deleteMessage(message) {
         .then(() => {
             messages.value = messages.value.filter(m => m.id !== message.id);
         });
+}
+
+function scrollToMessage(id) {
+    const container = document.getElementById('room-messages');
+    const el = document.getElementById('message-' + id);
+    if (!container || !el) return;
+
+    container.scrollTo({
+        top: el.offsetTop - container.clientHeight / 2 + el.clientHeight / 2,
+        behavior: 'smooth'
+    });
+
+    el.classList.add('flash-highlight');
+    setTimeout(() => el.classList.remove('flash-highlight'), 1400);
 }
 
 function flashActivePeer(e) {
@@ -203,5 +252,13 @@ function flashActivePeer(e) {
 </script>
 
 <style scoped>
+.flash-highlight {
+    border-radius: 0.75rem;
+    animation: flashHighlight 1.4s ease-out;
+}
 
+@keyframes flashHighlight {
+    0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.55); }
+    100% { box-shadow: 0 0 0 12px rgba(79, 70, 229, 0); }
+}
 </style>

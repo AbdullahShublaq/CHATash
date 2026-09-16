@@ -51,13 +51,26 @@ class PrivateRoomMessagesController extends Controller
         $data = $request->validate([
             'private_room_id' => 'required|exists:private_rooms,id',
             'user_id' => 'required|exists:users,id',
-            'message' => 'required|string'
+            'message' => 'required|string',
+            'reply_to_id' => 'nullable|exists:private_room_messages,id'
         ]);
+
+        $replyTo = null;
+        if (!empty($data['reply_to_id'])) {
+            $replied = PrivateRoomMessage::with('user')->find($data['reply_to_id']);
+            $replyTo = [
+                'id' => $replied->id,
+                'user_name' => $replied->user->name,
+                'message' => $replied->message,
+            ];
+        }
 
         $message = PrivateRoomMessage::create([
             'private_room_id' => $data['private_room_id'],
             'user_id' => $data['user_id'],
-            'message' => $data['message']
+            'message' => $data['message'],
+            'reply_to_id' => $data['reply_to_id'] ?? null,
+            'reply_to' => $replyTo,
         ]);
 
         event(new PrivateRoomMessageCreated(MessageResource::make($message)));

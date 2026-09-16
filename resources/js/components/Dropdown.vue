@@ -8,6 +8,7 @@
         </div>
 
         <div v-show="isOpen"
+             ref="menuEl"
              @click="isOpen = false"
              class="dropdown-menu absolute top-full mt-2 py-1.5 min-w-[10rem] rounded-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-xl shadow-indigo-950/10 dark:shadow-black/40 z-50"
              :class="align === 'left' ? 'left-0' : 'right-0'"
@@ -18,7 +19,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onBeforeUnmount } from 'vue';
+import { ref, watch, nextTick, onBeforeUnmount } from 'vue';
 
 const props = defineProps({
     width: { type: String, default: 'auto' },
@@ -26,11 +27,17 @@ const props = defineProps({
 });
 
 const root = ref(null);
+const menuEl = ref(null);
 const isOpen = ref(false);
 
 watch(isOpen, (open) => {
     if (open) {
         document.addEventListener('click', closeIfClickOutside);
+        nextTick(() => {
+            if (menuEl.value && typeof menuEl.value.scrollIntoView === 'function') {
+                menuEl.value.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        });
     }
 });
 

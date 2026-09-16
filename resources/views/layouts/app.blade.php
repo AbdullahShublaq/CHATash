@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -41,10 +41,10 @@
 <body class="min-h-screen antialiased leading-none">
 <div id="app">
     <nav id="nav" class="sticky top-0 z-40 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-b border-white/60 dark:border-white/10 shadow-sm py-3">
-        <div class="mx-auto px-6 md:px-0">
+        <div class="mx-auto px-3 sm:px-6 md:px-0">
             <div class="flex items-center justify-center">
-                <div class="mr-6 ml-8">
-                    <a href="{{ url('/') }}" class="flex text-lg font-semibold text-slate-800 dark:text-white no-underline">
+                <div class="mr-3 ml-2 sm:mr-6 sm:ml-8">
+                    <a href="{{ url('/') }}" class="flex text-base sm:text-lg font-semibold text-slate-800 dark:text-white no-underline">
                         {{ config('app.name', 'Laravel') }}
                         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chat-quote ml-1 text-indigo-600" fill="currentColor"
                              xmlns="http://www.w3.org/2000/svg">
@@ -59,7 +59,7 @@
                         </svg>
                     </a>
                 </div>
-                <div class="flex-1 mr-4 flex items-center justify-end gap-3">
+                <div class="flex-1 mr-4 flex items-center justify-end gap-1 sm:gap-3">
                     <button type="button" id="theme-toggle" title="Toggle dark/light theme"
                             onclick="toggleTheme()"
                             class="inline-flex items-center justify-center align-middle w-9 h-9 rounded-full text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 dark:text-slate-300 dark:hover:text-indigo-300 dark:hover:bg-white/10 transition">
@@ -85,7 +85,7 @@
                                         <img class="w-8 h-8 rounded-full ring-2 ring-indigo-200 shadow"
                                              src="https://ui-avatars.com/api/?name={{urlencode(Auth::user()->name)}}&amp;background=random&amp;color=fff"
                                              alt="avatar">
-                                        <span class="text-slate-700 dark:text-slate-200 text-sm font-medium pr-4 ml-2">
+                                        <span class="hidden sm:inline text-slate-700 dark:text-slate-200 text-sm font-medium pr-4 ml-2">
                                         {{ Auth::user()->name }}
                                         </span>
                                     </div>

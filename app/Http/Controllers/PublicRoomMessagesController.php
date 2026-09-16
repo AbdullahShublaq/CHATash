@@ -49,12 +49,25 @@ class PublicRoomMessagesController extends Controller
         //
         $data = $request->validate([
             'user_id' => 'required|exists:users,id',
-            'message' => 'required|string'
+            'message' => 'required|string',
+            'reply_to_id' => 'nullable|exists:public_room_messages,id'
         ]);
+
+        $replyTo = null;
+        if (!empty($data['reply_to_id'])) {
+            $replied = PublicRoomMessage::with('user')->find($data['reply_to_id']);
+            $replyTo = [
+                'id' => $replied->id,
+                'user_name' => $replied->user->name,
+                'message' => $replied->message,
+            ];
+        }
 
         $message = PublicRoomMessage::create([
             'user_id' => $data['user_id'],
-            'message' => $data['message']
+            'message' => $data['message'],
+            'reply_to_id' => $data['reply_to_id'] ?? null,
+            'reply_to' => $replyTo,
         ]);
 
         event(new PublicRoomMessageCreated(MessageResource::make($message)));

@@ -20,6 +20,9 @@ Broadcast::channel('messages', function ($user) {
 
 Broadcast::channel('messages.{roomId}', function ($user, $id) {
 //    return (int) $user->id === (int) $id;
+    if($user->is_admin){
+        return ['user' => $user];
+    }
     if($user->accessiblePrivateRooms()->contains($id)){
         return ['user' => $user];
     }

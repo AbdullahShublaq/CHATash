@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class PublicRoomMessage extends Model
 {
     use HasUuids;
-    protected $fillable = ['user_id', 'message'];
+    protected $fillable = ['user_id', 'message', 'reply_to_id', 'reply_to'];
+    protected $casts = ['reply_to' => 'array'];
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

@@ -55,6 +55,10 @@ class User extends Authenticatable
 
     public function accessiblePrivateRooms()
     {
+        if ($this->is_admin) {
+            return PrivateRoom::all();
+        }
+
         return PrivateRoom::where('owner_id', $this->id)
             ->orWhereHas('participants', function ($query) {
                 $query->where('user_id', $this->id);

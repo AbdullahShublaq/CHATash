@@ -3,7 +3,7 @@
 @section('content')
     <div class="relative w-full mx-auto px-4 md:px-8 lg:px-16 py-10 md:py-14">
         <div class="text-center mb-10 md:mb-14">
-            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">Welcome,
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight break-words">Welcome,
                 <span class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">{{ auth()->user()->name }}</span>
             </h1>
         </div>
