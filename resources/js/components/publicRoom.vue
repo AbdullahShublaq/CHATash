@@ -63,6 +63,27 @@
                                     <p v-text="message.message" :class="currentUser.id == message.user_id ? 'text-white' : 'text-gray-800 dark:text-slate-100'" class="leading-relaxed text-sm break-words"></p>
                                     <span v-text="message.time" :class="currentUser.id == message.user_id ? 'text-blue-100' : 'text-gray-400'" class="text-xs font-normal"></span>
                                 </div>
+                                <dropdown v-if="(message.user_id == currentUser.id || currentUser.is_admin) && message.id"
+                                          :align="currentUser.id == message.user_id ? 'right' : 'left'">
+                                    <template v-slot:trigger>
+                                        <button type="button"
+                                                class="flex items-center justify-center w-7 h-7 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-500/10 dark:text-slate-500 dark:hover:text-slate-300 dark:hover:bg-white/10 transition"
+                                                title="Message options"
+                                                aria-label="Message options">
+                                            <svg viewBox="0 0 16 16" class="w-4 h-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                                            </svg>
+                                        </button>
+                                    </template>
+                                    <button type="button" @click="deleteMessage(message)"
+                                            class="flex items-center w-full px-4 py-2 text-sm font-medium text-rose-600 dark:text-rose-400 no-underline hover:bg-rose-50 dark:hover:bg-rose-500/10 transition text-left">
+                                        <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 mr-2 flex-shrink-0" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+                                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+                                        </svg>
+                                        Delete message
+                                    </button>
+                                </dropdown>
                             </div>
                         </div>
                         <div v-if="activePeer" class="flex justify-start items-center">
@@ -127,6 +148,9 @@ onMounted(() => {
             if (message.user_id === currentUser.id) playSend();
             else playReceive();
         })
+        .listen('PublicRoomMessageDeleted', ({message_id}) => {
+            messages.value = messages.value.filter(m => m.id !== message_id);
+        })
         .listenForWhisper('typing', flashActivePeer);
 });
 
@@ -156,6 +180,13 @@ function tagPeers() {
     channel.value.whisper('typing', {
         user: window.App.user
     });
+}
+
+function deleteMessage(message) {
+    axios.delete('/public/messages/' + message.id)
+        .then(() => {
+            messages.value = messages.value.filter(m => m.id !== message.id);
+        });
 }
 
 function flashActivePeer(e) {

@@ -4,39 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c74e221-e277-481d-8a31-a9c6318729bb" name="Default Changelist" comment="add sounds effect to messages">
+    <list default="true" id="3c74e221-e277-481d-8a31-a9c6318729bb" name="Default Changelist" comment="ignore .idea">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/PrivateRoomController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/PrivateRoomController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/PrivateRoom.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/PrivateRoom.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/PrivateRoomMessage.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/PrivateRoomMessage.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/PrivateRoomParticipant.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/PrivateRoomParticipant.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/PublicRoomMessage.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/PublicRoomMessage.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/User.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Providers/AppServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Providers/AppServiceProvider.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2020_09_05_073341_create_public_rooms_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2020_09_05_073341_create_public_rooms_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2020_09_09_170540_create_private_rooms_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2020_09_09_170540_create_private_rooms_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2020_09_09_170635_create_private_room_participants_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2020_09_09_170635_create_private_room_participants_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2020_09_09_170751_create_private_room_messages_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2020_09_09_170751_create_private_room_messages_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/seeders/UserSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeders/UserSeeder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/css/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/resources/css/app.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/PrivateRoomMessagesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/PrivateRoomMessagesController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/PublicRoomMessagesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/PublicRoomMessagesController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/MessageResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/MessageResource.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/components/Dropdown.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/Dropdown.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/NewRoomModal.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/NewRoomModal.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/components/privateRoom.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/privateRoom.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/privateRoomCard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/privateRoomCard.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/components/publicRoom.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/publicRoom.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/auth/login.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/auth/login.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/auth/passwords/confirm.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/auth/passwords/confirm.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/auth/passwords/email.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/auth/passwords/email.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/auth/passwords/reset.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/auth/passwords/reset.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/auth/register.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/auth/register.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/auth/verify.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/auth/verify.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/home.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/home.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/rooms/private/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/rooms/private/index.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/welcome.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/welcome.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/tailwind.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -477,7 +454,7 @@
       <workItem from="1600177293701" duration="11311000" />
       <workItem from="1600244298153" duration="10025000" />
       <workItem from="1600350367833" duration="3754000" />
-      <workItem from="1789331355861" duration="5938000" />
+      <workItem from="1789331355861" duration="7258000" />
     </task>
     <task id="LOCAL-00001" summary="fix styles and small bugs">
       <option name="closed" value="true" />
@@ -503,7 +480,23 @@
       <option name="project" value="LOCAL" />
       <updated>1789502607187</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="add uuid, and dark theme">
+      <option name="closed" value="true" />
+      <created>1789504944013</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1789504944013</updated>
+    </task>
+    <task id="LOCAL-00005" summary="ignore .idea">
+      <option name="closed" value="true" />
+      <created>1789504995178</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1789504995178</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -597,7 +590,9 @@
     <MESSAGE value="fix styles and small bugs" />
     <MESSAGE value="fix issue" />
     <MESSAGE value="add sounds effect to messages" />
-    <option name="LAST_COMMIT_MESSAGE" value="add sounds effect to messages" />
+    <MESSAGE value="add uuid, and dark theme" />
+    <MESSAGE value="ignore .idea" />
+    <option name="LAST_COMMIT_MESSAGE" value="ignore .idea" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/resources/js/components/publicRoom/Current.vue" />

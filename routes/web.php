@@ -46,9 +46,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     Route::resource('/public', PublicRoomController::class)->only('index');
-    Route::resource('/public/messages', PublicRoomMessagesController::class)->only('index', 'store');
+    Route::resource('/public/messages', PublicRoomMessagesController::class)->only('index', 'store', 'destroy');
 
-    Route::resource('/private/messages', PrivateRoomMessagesController::class)->only('index', 'store');
+    Route::resource('/private/messages', PrivateRoomMessagesController::class)->only('index', 'store', 'destroy');
     Route::resource('/private', PrivateRoomController::class)->only('index', 'show', 'store');
     Route::post('/private/addParticipant', [PrivateRoomController::class, 'addParticipant']);
 });

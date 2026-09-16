@@ -16,6 +16,7 @@
             'name' => auth()->user()->name,
             'email' => auth()->user()->email,
             'avatar' => auth()->user()->avatar,
+            'is_admin' => (bool)auth()->user()->is_admin,
         ] : null;
     @endphp
     <script>

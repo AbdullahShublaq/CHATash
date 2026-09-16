@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\PublicRoomMessageCreated;
+use App\Events\PublicRoomMessageDeleted;
 use App\Http\Resources\MessageResource;
 use App\Models\PublicRoomMessage;
 use Illuminate\Http\Request;
@@ -102,5 +103,14 @@ class PublicRoomMessagesController extends Controller
     public function destroy($id)
     {
         //
+        $message = PublicRoomMessage::findOrFail($id);
+
+        if ($message->user_id !== auth()->id() && !auth()->user()->is_admin) {
+            abort(403, 'You are not allowed to delete this message.');
+        }
+
+        $message->delete();
+
+        event(new PublicRoomMessageDeleted($message->id));
     }
 }
