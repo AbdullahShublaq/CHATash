@@ -10,22 +10,31 @@ use Illuminate\Http\Request;
 
 class PublicRoomMessagesController extends Controller
 {
+    private const int PAGE_SIZE = 100;
 
     /**
      * Display a listing of the resource.
      *
      * @return array
      */
-    public function index()
+    public function index(Request $request)
     {
         //
         $result = [];
-        $data = PublicRoomMessage::with('user')->latest()->limit(100)->get()->reverse()->values();
+        $data = PublicRoomMessage::with('user')
+            ->when($request->filled('before'), function ($query) use ($request) {
+                $query->where('created_at', '<', $request->input('before'));
+            })
+            ->latest()
+            ->limit(self::PAGE_SIZE)
+            ->get()
+            ->reverse()
+            ->values();
         foreach ($data as $row) {
             array_push($result, MessageResource::make($row));
         }
 
-        return $result;
+return response($result)->header('X-Has-More', count($result) === self::PAGE_SIZE ? 'true' : 'false');
     }
 
     /**

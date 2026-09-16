@@ -71,6 +71,19 @@
 
                 <div id="room-messages" class="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 py-4 bg-transparent">
                     <div class="flex flex-col space-y-3">
+                        <div v-if="loadingOlder" class="flex justify-center py-2">
+                            <svg class="animate-spin h-5 w-5 text-indigo-500" viewBox="0 0 24 24" fill="none">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                            </svg>
+                        </div>
+                        <button v-else-if="!noOlderMessages && messages.length" type="button" @click="loadOlderMessages"
+                                class="flex items-center justify-center w-full py-2 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-white/5 rounded-lg transition">
+                            Show older messages
+                        </button>
+                        <div v-if="noOlderMessages && messages.length" class="flex justify-center py-2">
+                            <span class="text-xs font-medium text-slate-400 dark:text-slate-500">— That's the beginning of the room —</span>
+                        </div>
                         <div v-for="message in messages" :id="'message-' + message.id" :class="currentUser.id != message.user_id ? 'flex justify-start' : 'flex justify-end'">
                             <div class="flex items-end space-x-2 max-w-[85%] md:max-w-[70%]">
                                 <img v-if="currentUser.id != message.user_id" class="w-8 h-8 rounded-full flex-shrink-0 mb-1" :src="message.user_avatar" alt="avatar" :title="message.user_name">
@@ -178,6 +191,8 @@ const replyTo = ref(null);
 const messageInput = ref(null);
 const scrolledUp = ref(false);
 const forceScroll = ref(false);
+const loadingOlder = ref(false);
+const noOlderMessages = ref(false);
 
 const channel = computed(() => window.Echo.join('messages.' + props.room.id));
 
@@ -193,6 +208,7 @@ onMounted(() => {
         }
     }).then(response => {
         messages.value = response.data;
+        noOlderMessages.value = response.headers['x-has-more'] !== 'true';
         scrollMessagesToBottom();
     });
 
@@ -259,6 +275,35 @@ function handleMessagesScroll() {
     const container = document.getElementById("room-messages");
     if (!container) return;
     scrolledUp.value = container.scrollHeight - container.scrollTop - container.clientHeight > 80;
+}
+
+function loadOlderMessages() {
+    if (loadingOlder.value || noOlderMessages.value || messages.value.length === 0) return;
+
+    const container = document.getElementById("room-messages");
+    if (!container) return;
+
+    const cursor = messages.value[0].created_at;
+    const previousScrollHeight = container.scrollHeight;
+    const previousScrollTop = container.scrollTop;
+    loadingOlder.value = true;
+
+    axios.get('/private/messages', {
+        params: {
+            private_room_id: props.room.id,
+            before: cursor
+        }
+    }).then(response => {
+        const older = response.data;
+        noOlderMessages.value = response.headers['x-has-more'] !== 'true';
+        if (older.length === 0) return;
+        messages.value = [...older, ...messages.value];
+        nextTick(() => {
+            container.scrollTop = container.scrollHeight - previousScrollHeight + previousScrollTop;
+        });
+    }).finally(() => {
+        loadingOlder.value = false;
+    });
 }
 
 function scrollMessagesToBottom() {

@@ -12,6 +12,7 @@ use Illuminate\Validation\Rule;
 
 class PrivateRoomMessagesController extends Controller
 {
+    private const int PAGE_SIZE = 100;
 
     /**
      * Display a listing of the resource.
@@ -30,18 +31,21 @@ class PrivateRoomMessagesController extends Controller
         $this->ensureUserCanAccessRoom($room);
 
         $result = [];
-        $data = PrivateRoomMessage::where('private_room_id', $request->private_room_id)
+        $messages = PrivateRoomMessage::where('private_room_id', $request->private_room_id)
             ->with('user')
+            ->when($request->filled('before'), function ($query) use ($request) {
+                $query->where('created_at', '<', $request->input('before'));
+            })
             ->latest()
-            ->limit(100)
+            ->limit(self::PAGE_SIZE)
             ->get()
             ->reverse()
             ->values();
-        foreach ($data as $row) {
+        foreach ($messages as $row) {
             array_push($result, MessageResource::make($row));
         }
 
-        return $result;
+        return response($result)->header('X-Has-More', count($result) === self::PAGE_SIZE ? 'true' : 'false');
     }
 
     /**

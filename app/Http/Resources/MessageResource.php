@@ -22,6 +22,7 @@ class MessageResource extends JsonResource
             'message' => $this->message,
             'reply_to' => $this->reply_to,
             'time' => $this->created_at->diffForHumans(),
+            'created_at' => $this->created_at->toISOString(),
         ];
     }
 }
