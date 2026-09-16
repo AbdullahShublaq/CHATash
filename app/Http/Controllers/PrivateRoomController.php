@@ -72,8 +72,8 @@ class PrivateRoomController extends Controller
 
         $room = PrivateRoom::findOrFail($data['private_room_id']);
 
-        if (!auth()->user()->accessiblePrivateRooms()->contains('id', $room->id)) {
-            abort(403, 'You are not allowed to add participants to this room.');
+        if (!auth()->user()->is_admin && auth()->id() !== $room->owner_id) {
+            abort(403, 'Only the room owner can add participants.');
         }
 
         $user = User::where('email', $data['email'])->first();
@@ -85,7 +85,12 @@ class PrivateRoomController extends Controller
 
         $room->participants()->attach($user);
 
-        return $user;
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+            'avatar' => $user->avatar,
+            'active' => false,
+        ];
     }
 
     /**

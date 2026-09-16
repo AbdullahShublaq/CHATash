@@ -20,7 +20,7 @@ class PublicRoomMessagesController extends Controller
     {
         //
         $result = [];
-        $data = PublicRoomMessage::with('user')->get();
+        $data = PublicRoomMessage::with('user')->latest()->limit(100)->get()->reverse()->values();
         foreach ($data as $row) {
             array_push($result, MessageResource::make($row));
         }
@@ -48,7 +48,7 @@ class PublicRoomMessagesController extends Controller
     {
         //
         $data = $request->validate([
-            'message' => 'required|string',
+            'message' => 'required|string|max:1000',
             'reply_to_id' => 'nullable|exists:public_room_messages,id'
         ]);
 

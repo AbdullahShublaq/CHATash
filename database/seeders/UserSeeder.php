@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
@@ -15,10 +16,10 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::firstOrCreate(
-            ['name' => 'ASHfox'],
+            ['email' => env('ADMIN_EMAIL')],
             [
-                'email' => 'ash@fox.me',
-                'password' => Hash::make('ashfox123456*/'),
+                'name' => env('ADMIN_NAME'),
+                'password' => Hash::make(env('ADMIN_PASSWORD')),
                 'is_admin' => 1,
             ]
         );

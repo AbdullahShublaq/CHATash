@@ -18,11 +18,12 @@ class PrivateRoom extends Model
         return $this->path();
     }
     public function getParticipantsAttribute(){
-//        $users = [];
-//        foreach ($participants as $participant){
-//            array_push($users, $participant->user()->first());
-//        }
-        return $this->participants()->get();
+        return $this->participants()->get()->map(fn ($user) => [
+            'id' => $user->id,
+            'name' => $user->name,
+            'avatar' => $user->avatar,
+            'active' => false,
+        ]);
     }
     public function getParticipantsCountAttribute(): int
     {

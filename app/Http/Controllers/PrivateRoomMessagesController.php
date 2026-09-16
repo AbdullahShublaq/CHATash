@@ -8,6 +8,7 @@ use App\Http\Resources\MessageResource;
 use App\Models\PrivateRoom;
 use App\Models\PrivateRoomMessage;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class PrivateRoomMessagesController extends Controller
 {
@@ -29,7 +30,13 @@ class PrivateRoomMessagesController extends Controller
         $this->ensureUserCanAccessRoom($room);
 
         $result = [];
-        $data = PrivateRoomMessage::where('private_room_id', $request->private_room_id)->with('user')->get();
+        $data = PrivateRoomMessage::where('private_room_id', $request->private_room_id)
+            ->with('user')
+            ->latest()
+            ->limit(100)
+            ->get()
+            ->reverse()
+            ->values();
         foreach ($data as $row) {
             array_push($result, MessageResource::make($row));
         }
@@ -58,8 +65,10 @@ class PrivateRoomMessagesController extends Controller
         //
         $data = $request->validate([
             'private_room_id' => 'required|exists:private_rooms,id',
-            'message' => 'required|string',
-            'reply_to_id' => 'nullable|exists:private_room_messages,id'
+            'message' => 'required|string|max:1000',
+            'reply_to_id' => ['nullable', Rule::exists('private_room_messages', 'id')->where(function ($query) use ($request) {
+                $query->where('private_room_id', $request->input('private_room_id'));
+            })],
         ]);
 
         $room = PrivateRoom::findOrFail($data['private_room_id']);
