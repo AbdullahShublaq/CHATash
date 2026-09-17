@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class PrivateRoomParticipant extends Pivot
 {
     use HasUuids;
+    protected $table = 'private_room_participants';
     protected $fillable = ['user_id', 'private_room_id'];
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo

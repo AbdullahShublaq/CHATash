@@ -69,7 +69,7 @@ class PrivateRoomMessagesController extends Controller
         //
         $data = $request->validate([
             'private_room_id' => 'required|exists:private_rooms,id',
-            'message' => 'required|string|max:1000',
+            'message_blobs' => 'required|json|max:200000',
             'reply_to_id' => ['nullable', Rule::exists('private_room_messages', 'id')->where(function ($query) use ($request) {
                 $query->where('private_room_id', $request->input('private_room_id'));
             })],
@@ -91,7 +91,7 @@ class PrivateRoomMessagesController extends Controller
         $message = PrivateRoomMessage::create([
             'private_room_id' => $room->id,
             'user_id' => auth()->id(),
-            'message' => $data['message'],
+            'message' => $data['message_blobs'],
             'reply_to_id' => $data['reply_to_id'] ?? null,
             'reply_to' => $replyTo,
         ]);

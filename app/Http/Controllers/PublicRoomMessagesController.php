@@ -57,7 +57,7 @@ return response($result)->header('X-Has-More', count($result) === self::PAGE_SIZ
     {
         //
         $data = $request->validate([
-            'message' => 'required|string|max:1000',
+            'message' => 'required|string|max:5000',
             'reply_to_id' => 'nullable|exists:public_room_messages,id'
         ]);
 

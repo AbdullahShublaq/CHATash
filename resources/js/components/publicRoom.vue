@@ -78,10 +78,10 @@
                                          class="border-l-4 rounded-lg backdrop-blur px-2.5 py-1.5 mb-2 shadow-sm cursor-pointer transition"
                                          :title="'Scroll to replied message'">
                                         <p class="text-xs font-semibold truncate" :class="currentUser.id == message.user_id ? 'text-blue-100' : 'text-indigo-600 dark:text-indigo-300'" v-text="'Replying to ' + message.reply_to.user_name"></p>
-                                        <p class="text-xs line-clamp-2 break-words" :class="currentUser.id == message.user_id ? 'text-blue-200/90' : 'text-slate-500 dark:text-slate-400'" v-text="message.reply_to.message"></p>
+                                        <p class="text-xs line-clamp-2 break-words" :class="currentUser.id == message.user_id ? 'text-blue-200/90' : 'text-slate-500 dark:text-slate-400'" v-text="replyText(message)"></p>
                                     </div>
                                     <p v-if="currentUser.id != message.user_id" class="text-xs font-medium text-indigo-600 dark:text-indigo-400 mb-0.5" v-text="message.user_name"></p>
-                                    <p v-text="message.message" :class="currentUser.id == message.user_id ? 'text-white' : 'text-gray-800 dark:text-slate-100'" class="leading-relaxed text-sm break-words"></p>
+                                    <p v-text="messageText(message)" :class="currentUser.id == message.user_id ? 'text-white' : 'text-gray-800 dark:text-slate-100'" class="leading-relaxed text-sm break-words"></p>
                                     <span v-text="message.time" :class="currentUser.id == message.user_id ? 'text-blue-100' : 'text-gray-400'" class="text-xs font-normal"></span>
                                 </div>
                                 <dropdown v-if="message.id"
@@ -133,14 +133,14 @@
                     <svg viewBox="0 0 16 16" class="w-4 h-4 text-indigo-500 dark:text-indigo-400 flex-shrink-0" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8.354 1.646a.5.5 0 0 0-.708 0L4.5 4.793a.5.5 0 1 0 .708.707L7.5 3.207V12.5a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 0-1H8V3.207l2.293 1.293a.5.5 0 0 0 .708-.707l-3-3z"/></svg>
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-semibold text-indigo-600 dark:text-indigo-300 truncate" v-text="'Replying to ' + replyTo.user_name"></p>
-                        <p class="text-xs text-slate-600 dark:text-slate-400 truncate" v-text="replyTo.message"></p>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 truncate" v-text="replyText(replyTo)"></p>
                     </div>
                     <button type="button" @click="replyTo = null" class="flex items-center justify-center w-7 h-7 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-500/10 dark:text-slate-500 dark:hover:text-slate-300 transition" aria-label="Cancel reply">
                         <svg viewBox="0 0 16 16" class="w-4 h-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>
                     </button>
                 </div>
                 <footer class="flex items-center bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-t border-white/60 dark:border-white/10 px-4 py-3 flex-shrink-0">
-                    <input ref="messageInput" v-model="newMessage" @keyup.enter="addMessage" @keydown="tagPeers" class="form-input flex-1 min-w-0 rounded-full border-gray-300/80 dark:border-white/10 bg-white/80 dark:bg-slate-800/60 px-4 py-2 text-base sm:text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 shadow-sm backdrop-blur focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30 dark:focus:ring-indigo-400/30" placeholder="Type your message...">
+                    <input ref="messageInput" v-model="newMessage" @keyup.enter="addMessage" @keydown="tagPeers" class="form-input flex-1 min-w-0 rounded-full border-gray-300/80 dark:border-white/10 bg-white/80 dark:bg-slate-800/60 px-4 py-2 text-base sm:text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 shadow-sm backdrop-blur focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30 dark:focus:ring-indigo-400/30" placeholder="Type your message..." maxlength="1000">
                     <button @click="addMessage" class="flex items-center rounded-full text-white text-sm font-semibold ml-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 px-5 py-2 shadow-md shadow-indigo-500/25 transition flex-shrink-0">
                         Send
                         <svg viewBox="0 0 16 16" class="ml-1 w-3.5 h-3.5" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -157,6 +157,7 @@
 <script setup>
 import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue';
 import { playSend, playReceive, playTyping } from '../sounds';
+import { ensureKeys, encryptPublic, decryptPublic } from '../crypto';
 
 const messages = ref([]);
 const newMessage = ref('');
@@ -171,18 +172,24 @@ const scrolledUp = ref(false);
 const forceScroll = ref(false);
 const loadingOlder = ref(false);
 const noOlderMessages = ref(false);
+const session = ref(null);
+const roomKey = ref(null);
 
 const channel = computed(() => window.Echo.join('messages'));
 
-onMounted(() => {
+onMounted(async () => {
     const container = document.getElementById("room-messages");
     if (container) container.addEventListener('scroll', handleMessagesScroll);
 
-    axios.get('/public/messages').then(response => {
-        messages.value = response.data;
-        noOlderMessages.value = response.headers['x-has-more'] !== 'true';
-        scrollMessagesToBottom();
-    });
+    session.value = await ensureKeys();
+
+    const keyResponse = await axios.get('/public/roomkey');
+    roomKey.value = keyResponse.data.key;
+
+    const response = await axios.get('/public/messages');
+    messages.value = response.data;
+    noOlderMessages.value = response.headers['x-has-more'] !== 'true';
+    scrollMessagesToBottom();
 
     channel.value
         .here(users => {
@@ -222,19 +229,47 @@ onUnmounted(() => {
 });
 
 function addMessage() {
-    if (newMessage.value != null && newMessage.value.trim() != '') {
-        activePeer.value = false;
+    if (newMessage.value == null || newMessage.value.trim() == '') return;
+    if (!roomKey.value) return;
 
-        axios.post('/public/messages', {
-            user_id: currentUser.id,
-            message: newMessage.value,
-            reply_to_id: replyTo.value ? replyTo.value.id : null
-        });
+    activePeer.value = false;
 
-        forceScroll.value = true;
-        newMessage.value = '';
-        replyTo.value = null;
+    const encrypted = encryptPublic(roomKey.value, newMessage.value);
+
+    axios.post('/public/messages', {
+        user_id: currentUser.id,
+        message: encrypted,
+        reply_to_id: replyTo.value ? replyTo.value.id : null
+    });
+
+    forceScroll.value = true;
+    newMessage.value = '';
+    replyTo.value = null;
+}
+
+function messageText(message) {
+    if ('__e2ee_plain' in message) return message.__e2ee_plain;
+    let text = '';
+    try {
+        text = decryptPublic(roomKey.value, message.message);
+    } catch (e) {
+        text = '';
     }
+    message.__e2ee_plain = text;
+    return text;
+}
+
+function replyText(message) {
+    if (!message.reply_to || !message.reply_to.message) return '';
+    if ('__e2ee_reply_plain' in message) return message.__e2ee_reply_plain;
+    let text = '';
+    try {
+        text = decryptPublic(roomKey.value, message.reply_to.message);
+    } catch (e) {
+        text = '';
+    }
+    message.__e2ee_reply_plain = text;
+    return text;
 }
 
 function handleMessagesScroll() {

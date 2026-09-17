@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\KeysController;
 use App\Http\Controllers\PrivateRoomController;
 use App\Http\Controllers\PrivateRoomMessagesController;
 use App\Http\Controllers\PublicRoomController;
@@ -47,6 +48,10 @@ Route::group(['middleware' => ['auth', 'throttle:60,1']], function () {
 
     Route::resource('/public', PublicRoomController::class)->only('index');
     Route::resource('/public/messages', PublicRoomMessagesController::class)->only('index', 'store', 'destroy');
+    Route::get('/public/roomkey', [KeysController::class, 'publicRoomKey']);
+
+    Route::post('/keys/publish', [KeysController::class, 'publish']);
+    Route::get('/keys/directory', [KeysController::class, 'directory']);
 
     Route::resource('/private/messages', PrivateRoomMessagesController::class)->only('index', 'store', 'destroy');
     Route::resource('/private', PrivateRoomController::class)->only('index', 'show', 'store');

@@ -17,6 +17,7 @@
             'email' => auth()->user()->email,
             'avatar' => auth()->user()->avatar,
             'is_admin' => (bool)auth()->user()->is_admin,
+            'public_key' => auth()->user()->public_key,
         ] : null;
     @endphp
     <script>
