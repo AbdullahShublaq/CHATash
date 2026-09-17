@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\PrivateRoom;
-use App\Models\Setting;
 use App\Models\User;
+use App\Services\RoomKeyService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
 
 class KeysController extends Controller
 {
@@ -23,16 +22,25 @@ class KeysController extends Controller
         return ['ok' => true];
     }
 
-    public function publicRoomKey()
+    public function publicRoomKey(RoomKeyService $keys)
     {
-        $setting = Setting::firstOrCreate(['key' => 'public_room_key']);
+        $current = $keys->current();
+        return ['key' => $current['key'], 'version' => (int) $current['version']];
+    }
 
-        if (empty($setting->value)) {
-            $setting->value = Crypt::encryptString(base64_encode(random_bytes(32)));
-            $setting->save();
+    public function publicRoomKeyHistory(RoomKeyService $keys)
+    {
+        return $keys->history();
+    }
+
+    public function rotatePublicRoomKey(Request $request, RoomKeyService $keys)
+    {
+        if (!auth()->user()->is_admin) {
+            abort(403, 'Only admins can rotate the public room key.');
         }
 
-        return ['key' => Crypt::decryptString($setting->value)];
+        $current = $keys->rotate();
+        return ['key' => $current['key'], 'version' => (int) $current['version']];
     }
 
     public function directory(Request $request)

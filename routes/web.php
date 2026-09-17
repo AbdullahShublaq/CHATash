@@ -47,13 +47,15 @@ Route::group(['middleware' => ['auth', 'throttle:60,1']], function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     Route::resource('/public', PublicRoomController::class)->only('index');
-    Route::resource('/public/messages', PublicRoomMessagesController::class)->only('index', 'store', 'destroy');
+    Route::resource('/public/messages', PublicRoomMessagesController::class)->only('index', 'store', 'destroy')->middleware('throttle:30,1');
     Route::get('/public/roomkey', [KeysController::class, 'publicRoomKey']);
+    Route::get('/public/roomkey/history', [KeysController::class, 'publicRoomKeyHistory']);
+    Route::post('/public/roomkey/rotate', [KeysController::class, 'rotatePublicRoomKey']);
 
     Route::post('/keys/publish', [KeysController::class, 'publish']);
     Route::get('/keys/directory', [KeysController::class, 'directory']);
 
-    Route::resource('/private/messages', PrivateRoomMessagesController::class)->only('index', 'store', 'destroy');
+    Route::resource('/private/messages', PrivateRoomMessagesController::class)->only('index', 'store', 'destroy')->middleware('throttle:30,1');
     Route::resource('/private', PrivateRoomController::class)->only('index', 'show', 'store');
     Route::post('/private/addParticipant', [PrivateRoomController::class, 'addParticipant']);
 });

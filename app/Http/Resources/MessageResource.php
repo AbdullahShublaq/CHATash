@@ -21,6 +21,7 @@ class MessageResource extends JsonResource
             'user_avatar' => $this->user->avatar,
             'message' => $this->message,
             'reply_to' => $this->reply_to,
+            'key_version' => $this->key_version,
             'time' => $this->created_at->diffForHumans(),
             'created_at' => $this->created_at->toISOString(),
         ];

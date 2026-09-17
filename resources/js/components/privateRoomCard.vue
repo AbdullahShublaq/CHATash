@@ -1,5 +1,5 @@
 <template>
-    <div class="m-4">
+    <div ref="el" class="m-4">
         <a :href="room.path" class="block group">
             <div class="flex flex-col card min-w-[15rem] p-8 items-center shadow-lg transition group-hover:-translate-y-1 group-hover:shadow-2xl group-hover:shadow-indigo-950/10">
                 <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 shadow-md shadow-indigo-500/30 flex items-center justify-center mb-4">
@@ -26,18 +26,22 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({
     room: { type: Object, required: true },
 });
 
 const activePeerCount = ref(0);
+const el = ref(null);
+let channel = null;
+let observer = null;
 
-const channel = computed(() => window.Echo.join('messages.' + props.room.id));
+function joinChannel() {
+    if (channel) return;
 
-onMounted(() => {
-    channel.value
+    channel = window.Echo.join('messages.' + props.room.id);
+    channel
         .here(users => {
             activePeerCount.value = users.length;
         })
@@ -47,6 +51,32 @@ onMounted(() => {
         .leaving(() => {
             activePeerCount.value--;
         });
+}
+
+function leaveChannel() {
+    if (!channel) return;
+
+    channel.leave();
+    channel = null;
+}
+
+onMounted(() => {
+    observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                joinChannel();
+            } else {
+                leaveChannel();
+            }
+        });
+    }, { rootMargin: '100px' });
+
+    if (el.value) observer.observe(el.value);
+});
+
+onUnmounted(() => {
+    if (observer) observer.disconnect();
+    leaveChannel();
 });
 </script>
 

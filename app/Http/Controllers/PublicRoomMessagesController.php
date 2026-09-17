@@ -6,6 +6,7 @@ use App\Events\PublicRoomMessageCreated;
 use App\Events\PublicRoomMessageDeleted;
 use App\Http\Resources\MessageResource;
 use App\Models\PublicRoomMessage;
+use App\Services\RoomKeyService;
 use Illuminate\Http\Request;
 
 class PublicRoomMessagesController extends Controller
@@ -76,6 +77,7 @@ return response($result)->header('X-Has-More', count($result) === self::PAGE_SIZ
             'message' => $data['message'],
             'reply_to_id' => $data['reply_to_id'] ?? null,
             'reply_to' => $replyTo,
+            'key_version' => app(RoomKeyService::class)->version(),
         ]);
 
         event(new PublicRoomMessageCreated(MessageResource::make($message)));

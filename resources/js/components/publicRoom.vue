@@ -173,7 +173,8 @@ const forceScroll = ref(false);
 const loadingOlder = ref(false);
 const noOlderMessages = ref(false);
 const session = ref(null);
-const roomKey = ref(null);
+const roomKeys = ref({});
+const currentVersion = ref(null);
 
 const channel = computed(() => window.Echo.join('messages'));
 
@@ -184,7 +185,13 @@ onMounted(async () => {
     session.value = await ensureKeys();
 
     const keyResponse = await axios.get('/public/roomkey');
-    roomKey.value = keyResponse.data.key;
+    currentVersion.value = keyResponse.data.version;
+    roomKeys.value[currentVersion.value] = keyResponse.data.key;
+
+    const historyResponse = await axios.get('/public/roomkey/history');
+    historyResponse.data.forEach(entry => {
+        roomKeys.value[entry.version] = entry.key;
+    });
 
     const response = await axios.get('/public/messages');
     messages.value = response.data;
@@ -230,11 +237,11 @@ onUnmounted(() => {
 
 function addMessage() {
     if (newMessage.value == null || newMessage.value.trim() == '') return;
-    if (!roomKey.value) return;
+    if (!roomKeys.value[currentVersion.value]) return;
 
     activePeer.value = false;
 
-    const encrypted = encryptPublic(roomKey.value, newMessage.value);
+    const encrypted = encryptPublic(roomKeys.value[currentVersion.value], newMessage.value);
 
     axios.post('/public/messages', {
         user_id: currentUser.id,
@@ -247,13 +254,20 @@ function addMessage() {
     replyTo.value = null;
 }
 
+function messageKey(message) {
+    return roomKeys.value[message.key_version] || roomKeys.value[currentVersion.value];
+}
+
 function messageText(message) {
     if ('__e2ee_plain' in message) return message.__e2ee_plain;
+    const key = messageKey(message);
     let text = '';
-    try {
-        text = decryptPublic(roomKey.value, message.message);
-    } catch (e) {
-        text = '';
+    if (key) {
+        try {
+            text = decryptPublic(key, message.message);
+        } catch (e) {
+            text = '';
+        }
     }
     message.__e2ee_plain = text;
     return text;
@@ -262,11 +276,14 @@ function messageText(message) {
 function replyText(message) {
     if (!message.reply_to || !message.reply_to.message) return '';
     if ('__e2ee_reply_plain' in message) return message.__e2ee_reply_plain;
+    const key = messageKey(message);
     let text = '';
-    try {
-        text = decryptPublic(roomKey.value, message.reply_to.message);
-    } catch (e) {
-        text = '';
+    if (key) {
+        try {
+            text = decryptPublic(key, message.reply_to.message);
+        } catch (e) {
+            text = '';
+        }
     }
     message.__e2ee_reply_plain = text;
     return text;
