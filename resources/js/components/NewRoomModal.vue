@@ -1,55 +1,63 @@
 <template>
-    <modal name="new-room" classes="p-10 bg-white rounded-lg" height="auto">
-        <h1 class="text-2xl font-normal mb-16 text-center">Let's Create PrivateRoom</h1>
+    <div>
+        <div class="flex flex-wrap items-center justify-between gap-4 w-full">
+            <h2 class="text-slate-700 dark:text-slate-200 text-xl font-semibold">My PrivateRooms</h2>
+            <button type="button" class="btn-primary" @click="show = true">Create room</button>
+        </div>
 
-        <form @submit.prevent="submit">
-            <div class="flex">
-                <div class="flex-1 mr-4">
-                    <div class="mb-4">
-                        <label for="name" class="text-sm text-blue-900 font-semibold block mb-2">Room Name</label>
-                        <input type="text" id="name"
-                               maxlength="15"
-                               class="border p-2 text-xs block w-full rounded bg-transparent"
-                               :class="form.errors.name ? 'border-red-500' : 'border-muted'"
-                               v-model="form.name"
-                        >
-                        <span class="text-xs font-italic text-red-500" v-if="form.errors.name"
-                              v-text="form.errors.name[0]"></span>
-                    </div>
+        <transition name="fade">
+            <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+                <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" @click="show = false"></div>
+                <div class="relative card p-6 sm:p-10 w-full max-w-md my-auto">
+                    <h1 class="text-2xl font-normal mb-8 text-center text-slate-800 dark:text-white">Let's Create PrivateRoom</h1>
+
+                    <form @submit.prevent="submit">
+                        <div class="mb-6">
+                            <label for="name" class="text-sm text-slate-700 dark:text-slate-200 font-medium block mb-2">Room Name</label>
+                            <input type="text" id="name"
+                                   maxlength="15"
+                                   class="input"
+                                   :class="form.errors.name ? 'border-red-500 focus:ring-red-500/30' : ''"
+                                   v-model="form.name">
+                            <span class="text-xs text-red-500 mt-2 block" v-if="form.errors.name"
+                                  v-text="form.errors.name[0]"></span>
+                        </div>
+
+                        <footer class="flex justify-end gap-2">
+                            <button type="button" class="btn-ghost" @click="show = false">Cancel</button>
+                            <button class="btn-primary">Create Room</button>
+                        </footer>
+                    </form>
                 </div>
             </div>
-
-            <footer class="flex justify-end">
-                <button type="button" class="button is-outlined mr-2"
-                        @click="$modal.hide('new-room')">Cancel
-                </button>
-                <button class="bg-blue-400 text-white rounded-lg py-2 px-4">Create Room</button>
-            </footer>
-        </form>
-
-    </modal>
+        </transition>
+    </div>
 </template>
 
-<script>
-    import PrivateRoomForm from './PrivateRoomForm';
+<script setup>
+import { ref } from 'vue';
+import PrivateRoomForm from './PrivateRoomForm';
 
-    export default {
-        data() {
-            return {
-                form: new PrivateRoomForm({
-                    name: '',
-                })
-            }
-        },
-        methods: {
-            async submit() {
-                this.form.submit('/private')
-                    .then(response => location = response.data.message);
-            }
-        }
-    }
+const form = ref(new PrivateRoomForm({
+    name: '',
+}));
+
+const show = ref(false);
+
+function submit() {
+    form.value.submit('/private')
+        .then(response => location = response.data.message);
+}
 </script>
 
 <style scoped>
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.15s ease;
+}
 
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
 </style>

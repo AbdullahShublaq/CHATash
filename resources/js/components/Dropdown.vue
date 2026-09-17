@@ -1,5 +1,5 @@
 <template>
-    <div class="dropdown relative cursor-pointer z-50">
+    <div ref="root" class="dropdown relative cursor-pointer z-50">
         <div class="dropdown-toggle"
              aria-haspopup="true"
              :aria-expanded="isOpen"
@@ -8,42 +8,49 @@
         </div>
 
         <div v-show="isOpen"
-             class="dropdown-menu absolute text-center bg-white py-2 rounded shadow mt-2"
-             :class="align === 'left' ? 'pin-l' : 'pin-r'"
+             ref="menuEl"
+             @click="isOpen = false"
+             class="dropdown-menu absolute top-full mt-2 py-1.5 min-w-[10rem] rounded-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-xl shadow-indigo-950/10 dark:shadow-black/40 z-50"
+             :class="align === 'left' ? 'left-0' : 'right-0'"
              :style="{ width }">
             <slot></slot>
         </div>
     </div>
 </template>
 
-<script>
-    export default {
-        props: {
-            width: { default: 'auto' },
-            align: { default: 'left' }
-        },
+<script setup>
+import { ref, watch, nextTick, onBeforeUnmount } from 'vue';
 
-        data() {
-            return { isOpen: false }
-        },
+const props = defineProps({
+    width: { type: String, default: 'auto' },
+    align: { type: String, default: 'left' }
+});
 
-        watch: {
-            isOpen(isOpen) {
-                if(isOpen) {
-                    document.addEventListener('click', this.closeIfClickOutside);
-                }
+const root = ref(null);
+const menuEl = ref(null);
+const isOpen = ref(false);
+
+watch(isOpen, (open) => {
+    if (open) {
+        document.addEventListener('click', closeIfClickOutside);
+        nextTick(() => {
+            if (menuEl.value && typeof menuEl.value.scrollIntoView === 'function') {
+                menuEl.value.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
-        },
-
-        methods: {
-            closeIfClickOutside(event) {
-                if(! event.target.closest('.dropdown')){
-                    this.isOpen = false;
-                    document.removeEventListener('click', this.closeIfClickOutside);
-                }
-            }
-        }
+        });
     }
+});
+
+onBeforeUnmount(() => {
+    document.removeEventListener('click', closeIfClickOutside);
+});
+
+function closeIfClickOutside(event) {
+    if (root.value && !root.value.contains(event.target)) {
+        isOpen.value = false;
+        document.removeEventListener('click', closeIfClickOutside);
+    }
+}
 </script>
 
 <style scoped>

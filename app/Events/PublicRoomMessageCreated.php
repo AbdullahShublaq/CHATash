@@ -24,15 +24,15 @@ class PublicRoomMessageCreated implements ShouldBroadcast
     public function __construct($message)
     {
         //
-        $this->message =$message;
+        $this->message = $message;
     }
 
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return Channel|PresenceChannel|array
      */
-    public function broadcastOn()
+    public function broadcastOn(): Channel|PresenceChannel|array
     {
         return new PresenceChannel('messages');
     }

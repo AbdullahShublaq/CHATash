@@ -11,12 +11,12 @@ class CreatePrivateRoomParticipantsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('private_room_participants', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('private_room_id');
-            $table->unsignedBigInteger('user_id');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('private_room_id');
+            $table->foreignUuid('user_id');
             $table->timestamps();
 
             $table->foreign('private_room_id')->references('id')->on('private_rooms')->onDelete('cascade');
@@ -29,7 +29,7 @@ class CreatePrivateRoomParticipantsTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('private_room_participants');
     }

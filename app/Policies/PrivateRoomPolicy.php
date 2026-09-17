@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\PrivateRoom;
-use App\User;
+use App\Models\PrivateRoom;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PrivateRoomPolicy
@@ -13,7 +13,7 @@ class PrivateRoomPolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param  \App\User  $user
+     * @param User $user
      * @return mixed
      */
     public function viewAny(User $user)
@@ -24,20 +24,22 @@ class PrivateRoomPolicy
     /**
      * Determine whether the user can view the model.
      *
-     * @param  \App\User  $user
-     * @param  \App\PrivateRoom  $privateRoom
-     * @return mixed
+     * @param User $user
+     * @param PrivateRoom $privateRoom
+     * @return bool
      */
-    public function view(User $user, PrivateRoom $privateRoom)
+    public function view(User $user, PrivateRoom $privateRoom): bool
     {
         //
-        return $user->is($privateRoom->owner) || $privateRoom->participants->contains($user);
+        return $user->is_admin
+            || $user->is($privateRoom->owner)
+            || $privateRoom->participants()->pluck('users.id')->contains($user->getKey());
     }
 
     /**
      * Determine whether the user can create models.
      *
-     * @param  \App\User  $user
+     * @param User $user
      * @return mixed
      */
     public function create(User $user)
@@ -48,8 +50,8 @@ class PrivateRoomPolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param  \App\User  $user
-     * @param  \App\PrivateRoom  $privateRoom
+     * @param User $user
+     * @param PrivateRoom $privateRoom
      * @return mixed
      */
     public function update(User $user, PrivateRoom $privateRoom)
@@ -60,8 +62,8 @@ class PrivateRoomPolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \App\User  $user
-     * @param  \App\PrivateRoom  $privateRoom
+     * @param User $user
+     * @param PrivateRoom $privateRoom
      * @return mixed
      */
     public function delete(User $user, PrivateRoom $privateRoom)
@@ -72,8 +74,8 @@ class PrivateRoomPolicy
     /**
      * Determine whether the user can restore the model.
      *
-     * @param  \App\User  $user
-     * @param  \App\PrivateRoom  $privateRoom
+     * @param User $user
+     * @param PrivateRoom $privateRoom
      * @return mixed
      */
     public function restore(User $user, PrivateRoom $privateRoom)
@@ -84,8 +86,8 @@ class PrivateRoomPolicy
     /**
      * Determine whether the user can permanently delete the model.
      *
-     * @param  \App\User  $user
-     * @param  \App\PrivateRoom  $privateRoom
+     * @param User $user
+     * @param PrivateRoom $privateRoom
      * @return mixed
      */
     public function forceDelete(User $user, PrivateRoom $privateRoom)

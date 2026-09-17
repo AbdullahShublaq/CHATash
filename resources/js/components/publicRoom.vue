@@ -1,195 +1,386 @@
 <template>
-    <div class="flex flex-wrap h-full" style="height: calc(100vh - 56px)">
-        <!--start-activatedUser-side-->
-        <div class="flex flex-col w-full lg:w-1/4">
-            <div id="activated-header" class="flex items-center justify-between text-blue-500 shadow-lg w-full py-4 px-4">
-                <div class="flex items-center w-full justify-between">
-                    <div class="flex items-center pl-4">
-                        <svg viewBox="0 0 16 16" color="#63b3ed" class="w-6 h-6 bi bi-globe opacity-20"
-                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                  d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path>
+    <div class="flex flex-col bg-gradient-to-br from-indigo-100 via-slate-50 to-blue-100 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 h-[calc(100vh-56px)] supports-[height:100dvh]:h-[calc(100dvh-56px)]">
+        <div class="relative flex flex-1 min-h-0">
+            <!-- Mobile drawer backdrop -->
+            <div v-if="expandCurrent" class="absolute inset-0 z-[55] bg-slate-900/50 md:hidden" @click="expandCurrent = false"></div>
+
+            <!-- Sidebar -->
+            <aside :class="[expandCurrent ? 'flex' : 'hidden', 'md:flex absolute z-[60] md:static inset-y-0 left-0 w-72 md:w-64 lg:w-72 flex-col bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-r border-white/60 dark:border-white/10 shadow-2xl md:shadow-none']">
+                <div class="flex items-center justify-between px-4 py-4 border-b border-white/70 dark:border-white/10 flex-shrink-0">
+                    <div class="flex items-center">
+                        <svg viewBox="0 0 16 16" color="#4f46e5" class="w-6 h-6 mr-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path>
                         </svg>
-                        <h1 class="text-xl font-semibold font-mono ml-2">
+                        <h1 class="text-lg font-semibold text-slate-800 dark:text-white">
                             Current
-                            <span v-text="participants.length" class="rounded-full p-2 text-xs bg-blue-400 text-white"></span>
+                            <span v-text="participants.length" class="ml-2 inline-block rounded-full px-2 py-0.5 text-xs bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300"></span>
                         </h1>
                     </div>
-                </div>
-                <div @click="expandCurrent = !expandCurrent" class="block lg:hidden">
-                    <button class="flex items-center px-3 py-2 border rounded text-blue-400 border-blue-400 border">
-                        <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+                    <button type="button" class="md:hidden text-gray-500 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-200" @click="expandCurrent = false" aria-label="Close online list">
+                        <svg viewBox="0 0 16 16" class="w-5 h-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>
                     </button>
                 </div>
-            </div>
-            <div id="activated-body" :class="expandCurrent ? 'block' : 'hidden'" class="lg:block overflow-y-scroll py-2 px-2"
-                 style="height: calc(100vh - 56px - 57px); max-height: calc(100vh - 56px - 57px)">
-                <div class="flex flex-col rounded-lg shadow-lg items-start bg-white p-2 text-blue-500">
-                    <div v-for="participant in participants" class="flex items-center my-2 w-full pb-2 pl-2 border-b">
-                        <img class="w-10 h-10 rounded-full"
-                             :src="participant.user.avatar"
-                             alt="avatar">
-                        <span v-text="participant.user.name" class="text-lg pr-4 ml-2 break-words"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--end-activatedUser-side-->
 
-        <!--start-messages-side-->
-        <div class="flex flex-col w-full lg:w-3/4">
-            <div id="room-header" class="flex items-center justify-between bg-blue-400 z-10 shadow-lg w-full py-4 px-6">
-                <div class="flex items-center">
-                    <svg viewBox="0 0 16 16" color="#FFF" class="w-6 h-6 bi bi-globe opacity-20" fill="currentColor"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                              d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4H2.255a7.025 7.025 0 0 1 3.072-2.472 6.7 6.7 0 0 0-.597.933c-.247.464-.462.98-.64 1.539zm-.582 3.5h-2.49c.062-.89.291-1.733.656-2.5H3.82a13.652 13.652 0 0 0-.312 2.5zM4.847 5H7.5v2.5H4.51A12.5 12.5 0 0 1 4.846 5zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5H8.5zM4.51 8.5H7.5V11H4.847a12.5 12.5 0 0 1-.338-2.5zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5H8.5zM5.145 12H7.5v2.923c-.67-.204-1.335-.82-1.887-1.855A7.97 7.97 0 0 1 5.145 12zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472zM3.82 11H1.674a6.958 6.958 0 0 1-.656-2.5h2.49c.03.877.138 1.718.312 2.5zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933zM8.5 12h2.355a7.967 7.967 0 0 1-.468 1.068c-.552 1.035-1.218 1.65-1.887 1.855V12zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5zm2.802-3.5h-2.49A13.65 13.65 0 0 0 12.18 5h2.146c.365.767.594 1.61.656 2.5zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7.024 7.024 0 0 0-3.072-2.472c.218.284.418.598.597.933zM10.855 4H8.5V1.077c.67.204 1.335.82 1.887 1.855.173.324.33.682.468 1.068z"></path>
-                    </svg>
-                    <h1 class="text-xl text-white font-mono ml-2">Public Room</h1>
+                <div class="flex-1 min-h-0 overflow-y-auto p-3">
+                    <div class="divide-y divide-gray-100 dark:divide-white/10">
+                        <div v-for="participant in participants" class="flex items-center py-2 px-2 rounded-lg hover:bg-white/70 dark:hover:bg-white/10">
+                            <img class="w-9 h-9 rounded-full ring-2 ring-white dark:ring-slate-700" :src="participant.user.avatar" alt="avatar">
+                            <p class="ml-3 text-sm font-medium text-slate-800 dark:text-slate-100 truncate" v-text="participant.user.name"></p>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex items-center">
-                    <a href="/home"
-                       class="flex items-center rounded rounded-lg font-semibold text-sm text-white bg-red-500 px-2 py-1">
-                        Leave
-                        <svg viewBox="0 0 16 16" class="ml-1 w-4 h-4 bi bi-globe opacity-20" fill="currentColor"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                  d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z"></path>
+            </aside>
+
+            <!-- Chat -->
+            <div class="flex flex-col flex-1 min-w-0">
+                <header class="flex items-center justify-between bg-gradient-to-r from-blue-700 via-indigo-700 to-indigo-900 px-4 py-3 shadow-lg shadow-indigo-950/20 flex-shrink-0">
+                    <div class="flex items-center min-w-0">
+                        <button type="button" class="md:hidden mr-3 text-white hover:text-blue-200" @click="expandCurrent = true" aria-label="Show online list">
+                            <svg viewBox="0 0 20 20" class="w-5 h-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+                        </button>
+                        <svg viewBox="0 0 16 16" class="w-6 h-6 text-white opacity-60 mr-2 flex-shrink-0" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4H2.255a7.025 7.025 0 0 1 3.072-2.472 6.7 6.7 0 0 0-.597.933c-.247.464-.462.98-.64 1.539zm-.582 3.5h-2.49c.062-.89.291-1.733.656-2.5H3.82a13.652 13.652 0 0 0-.312 2.5zM4.847 5H7.5v2.5H4.51A12.5 12.5 0 0 1 4.846 5zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5H8.5zM4.51 8.5H7.5V11H4.847a12.5 12.5 0 0 1-.338-2.5zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5H8.5zM5.145 12H7.5v2.923c-.67-.204-1.335-.82-1.887-1.855A7.97 7.97 0 0 1 5.145 12zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472zM3.82 11H1.674a6.958 6.958 0 0 1-.656-2.5h2.49c.03.877.138 1.718.312 2.5zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933zM8.5 12h2.355a7.967 7.967 0 0 1-.468 1.068c-.552 1.035-1.218 1.65-1.887 1.855V12zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5zm2.802-3.5h-2.49A13.65 13.65 0 0 0 12.18 5h2.146c.365.767.594 1.61.656 2.5zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7.024 7.024 0 0 0-3.072-2.472c.218.284.418.598.597.933zM10.855 4H8.5V1.077c.67.204 1.335.82 1.887 1.855.173.324.33.682.468 1.068z"></path>
                         </svg>
-                    </a>
-                </div>
-            </div>
-            <div id="room-messages" class="overflow-auto bg-white"
-                 style="height: calc(100vh - 56px - 56px - 58px); max-height: calc(100vh - 56px - 56px - 58px)">
-                <div class="flex flex-col">
-                    <div class="p-1" v-for="message in messages">
-                        <div v-if="currentUser.id != message.user_id" class="flex justify-start">
-                            <img class="w-10 h-10 rounded-full"
-                                 :src="message.user_avatar"
-                                 alt="avatar"
-                                 :title="message.user_name">
-                            <div class="flex flex-col rounded-tl-none rounded-lg w-full md:w-auto md:max-w-lg ml-1 bg-gray-200 py-2 px-4">
-                                <p v-text="message.message" class="leading-normal text-sm mb-2"></p>
-                                <span v-text="message.time" class="text-xs text-gray-600 font-light"></span>
+                        <h1 class="text-lg font-semibold text-white">Public Room</h1>
+                    </div>
+                    <div class="flex items-center flex-shrink-0 ml-3">
+                        <a href="/home" class="flex items-center text-sm font-semibold text-white bg-rose-500 hover:bg-rose-600 rounded-xl px-3 py-1.5 shadow-md shadow-rose-500/30 transition">
+                            Leave
+                            <svg viewBox="0 0 16 16" class="ml-1 w-4 h-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </header>
+
+                <div id="room-messages" class="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 py-4 bg-transparent">
+                    <div class="flex flex-col space-y-3">
+                        <div v-if="loadingOlder" class="flex justify-center py-2">
+                            <svg class="animate-spin h-5 w-5 text-indigo-500" viewBox="0 0 24 24" fill="none">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                            </svg>
+                        </div>
+                        <button v-else-if="!noOlderMessages && messages.length" type="button" @click="loadOlderMessages"
+                                class="flex items-center justify-center w-full py-2 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-white/5 rounded-lg transition">
+                            Show older messages
+                        </button>
+                        <div v-if="noOlderMessages && messages.length" class="flex justify-center py-2">
+                            <span class="text-xs font-medium text-slate-400 dark:text-slate-500">— That's the beginning of the room —</span>
+                        </div>
+                        <div v-for="message in messages" :id="'message-' + message.id" :class="currentUser.id != message.user_id ? 'flex justify-start' : 'flex justify-end'">
+                            <div class="flex items-end space-x-2 max-w-[85%] md:max-w-[70%]">
+                                <img v-if="currentUser.id != message.user_id" class="w-8 h-8 rounded-full flex-shrink-0 mb-1" :src="message.user_avatar" alt="avatar" :title="message.user_name">
+                                <div :class="currentUser.id != message.user_id ? 'bg-white/80 dark:bg-slate-800/80 backdrop-blur border border-white/70 dark:border-white/10 rounded-2xl rounded-bl-md' : 'bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl rounded-br-md'" class="px-4 py-2 shadow-md">
+                                    <div v-if="message.reply_to"
+                                         @click="scrollToMessage(message.reply_to.id)"
+                                         :class="currentUser.id == message.user_id ? 'bg-white/15 border-white/25 hover:bg-white/25' : 'bg-slate-100/90 dark:bg-white/5 border-indigo-400/50 dark:border-indigo-400/30 hover:bg-slate-200/80 dark:hover:bg-white/10'"
+                                         class="border-l-4 rounded-lg backdrop-blur px-2.5 py-1.5 mb-2 shadow-sm cursor-pointer transition"
+                                         :title="'Scroll to replied message'">
+                                        <p class="text-xs font-semibold truncate" :class="currentUser.id == message.user_id ? 'text-blue-100' : 'text-indigo-600 dark:text-indigo-300'" v-text="'Replying to ' + message.reply_to.user_name"></p>
+                                        <p class="text-xs line-clamp-2 break-words" :class="currentUser.id == message.user_id ? 'text-blue-200/90' : 'text-slate-500 dark:text-slate-400'" v-text="replyText(message)"></p>
+                                    </div>
+                                    <p v-if="currentUser.id != message.user_id" class="text-xs font-medium text-indigo-600 dark:text-indigo-400 mb-0.5" v-text="message.user_name"></p>
+                                    <p v-text="messageText(message)" :class="currentUser.id == message.user_id ? 'text-white' : 'text-gray-800 dark:text-slate-100'" class="leading-relaxed text-sm break-words"></p>
+                                    <span v-text="message.time" :class="currentUser.id == message.user_id ? 'text-blue-100' : 'text-gray-400'" class="text-xs font-normal"></span>
+                                </div>
+                                <dropdown v-if="message.id"
+                                          :align="currentUser.id == message.user_id ? 'right' : 'left'">
+                                    <template v-slot:trigger>
+                                        <button type="button"
+                                                class="flex items-center justify-center w-7 h-7 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-500/10 dark:text-slate-500 dark:hover:text-slate-300 dark:hover:bg-white/10 transition"
+                                                title="Message options"
+                                                aria-label="Message options">
+                                            <svg viewBox="0 0 16 16" class="w-4 h-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                                            </svg>
+                                        </button>
+                                    </template>
+                                    <button type="button" @click="setReply(message)"
+                                            class="flex items-center w-full px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 no-underline hover:bg-indigo-50 dark:hover:bg-white/10 hover:text-indigo-700 dark:hover:text-indigo-300 transition text-left">
+                                        <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 mr-2 flex-shrink-0" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M8.354 1.646a.5.5 0 0 0-.708 0L4.5 4.793a.5.5 0 1 0 .708.707L7.5 3.207V12.5a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 0-1H8V3.207l2.293 1.293a.5.5 0 0 0 .708-.707l-3-3z"/>
+                                        </svg>
+                                        Reply
+                                    </button>
+                                    <button v-if="message.user_id == currentUser.id || currentUser.is_admin" type="button" @click="deleteMessage(message)"
+                                            class="flex items-center w-full px-4 py-2 text-sm font-medium text-rose-600 dark:text-rose-400 no-underline hover:bg-rose-50 dark:hover:bg-rose-500/10 transition text-left">
+                                        <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 mr-2 flex-shrink-0" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+                                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+                                        </svg>
+                                        Delete message
+                                    </button>
+                                </dropdown>
                             </div>
                         </div>
-                        <div v-else class="flex justify-end">
-                            <div class="flex flex-col rounded-tr-none rounded-lg w-full md:w-auto md:max-w-lg bg-blue-500 py-2 px-4">
-                                <p v-text="message.message" class="leading-normal text-sm text-white mb-2"></p>
-                                <span v-text="message.time" class="text-xs text-gray-300 font-light"></span>
+                        <div v-if="activePeer" class="flex justify-start items-center">
+                            <img class="w-8 h-8 rounded-full mr-2" :src="activePeer.user.avatar" alt="avatar" :title="activePeer.user.name">
+                            <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur border border-white/70 dark:border-white/10 rounded-2xl rounded-bl-md px-4 py-2 shadow-md flex items-center">
+                                <span class="text-xs font-semibold text-gray-600 dark:text-slate-200 mr-1" v-text="activePeer.user.name"></span>
+                                <span class="text-xs text-gray-500 dark:text-slate-300">is typing</span>
+                                <span class="flex space-x-0.5 ml-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-slate-300 animate-bounce" style="animation-delay: 0s"></span>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-slate-300 animate-bounce" style="animation-delay: 0.15s"></span>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-slate-300 animate-bounce" style="animation-delay: 0.3s"></span>
+                                </span>
                             </div>
                         </div>
                     </div>
-                    <div v-if="activePeer" class="flex justify-start my-2">
-                        <img class="w-8 h-8 rounded-full"
-                             :src="activePeer.user.avatar"
-                             alt="avatar"
-                             :title="activePeer.user.name">
-                        <div class="flex items-center rounded-tl-none rounded-lg w-auto ml-2 bg-gray-200 px-2">
-                            <p class="text-xs font-semibold font-mono">Typing...</p>
-                        </div>
-                    </div>
                 </div>
-            </div>
-            <div id="room-footer" class="flex items-center justify-between bg-gray-300 w-full py-2 px-6">
-                <input v-model="newMessage" @keyup.enter="addMessage" @keydown="tagPeers"
-                       class="rounded rounded-lg w-full px-4 py-2 form-input" rows="1"
-                       placeholder="Enter your message...">
-                <button @click="addMessage"
-                        class="flex items-center rounded rounded-lg text-white text-sm font-semibold font-mono ml-16 bg-blue-500 py-2 px-4">
-                    Send
-                    <svg viewBox="0 0 16 16" class="ml-1 w-3 h-3 bi bi-globe opacity-20" fill="currentColor"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                              d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z"></path>
-                        <path fill-rule="evenodd"
-                              d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z"></path>
-                    </svg>
-                </button>
+
+                <div v-if="replyTo" class="flex items-center gap-2 px-4 py-2 bg-indigo-50/80 dark:bg-slate-800/80 backdrop-blur border-t border-white/60 dark:border-white/10 flex-shrink-0">
+                    <svg viewBox="0 0 16 16" class="w-4 h-4 text-indigo-500 dark:text-indigo-400 flex-shrink-0" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8.354 1.646a.5.5 0 0 0-.708 0L4.5 4.793a.5.5 0 1 0 .708.707L7.5 3.207V12.5a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 0-1H8V3.207l2.293 1.293a.5.5 0 0 0 .708-.707l-3-3z"/></svg>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-indigo-600 dark:text-indigo-300 truncate" v-text="'Replying to ' + replyTo.user_name"></p>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 truncate" v-text="replyText(replyTo)"></p>
+                    </div>
+                    <button type="button" @click="replyTo = null" class="flex items-center justify-center w-7 h-7 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-500/10 dark:text-slate-500 dark:hover:text-slate-300 transition" aria-label="Cancel reply">
+                        <svg viewBox="0 0 16 16" class="w-4 h-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>
+                    </button>
+                </div>
+                <footer class="flex items-center bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-t border-white/60 dark:border-white/10 px-4 py-3 flex-shrink-0">
+                    <input ref="messageInput" v-model="newMessage" @keyup.enter="addMessage" @keydown="tagPeers" class="form-input flex-1 min-w-0 rounded-full border-gray-300/80 dark:border-white/10 bg-white/80 dark:bg-slate-800/60 px-4 py-2 text-base sm:text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 shadow-sm backdrop-blur focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30 dark:focus:ring-indigo-400/30" placeholder="Type your message..." maxlength="1000">
+                    <button @click="addMessage" class="flex items-center rounded-full text-white text-sm font-semibold ml-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 px-5 py-2 shadow-md shadow-indigo-500/25 transition flex-shrink-0">
+                        Send
+                        <svg viewBox="0 0 16 16" class="ml-1 w-3.5 h-3.5" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z"></path>
+                            <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z"></path>
+                        </svg>
+                    </button>
+                </footer>
             </div>
         </div>
-        <!--end-messages-side-->
     </div>
 </template>
 
-<script>
-    export default {
-        data() {
-            return {
-                messages: [],
-                newMessage: '',
-                currentUser: window.App.user,
-                activePeer: false,
-                typingTimer: false,
-                participants: [],
-                expandCurrent: false
-            };
-        },
+<script setup>
+import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue';
+import { playSend, playReceive, playTyping } from '../sounds';
+import { ensureKeys, encryptPublic, decryptPublic } from '../crypto';
 
-        computed: {
-            channel() {
-                return window.Echo.join('messages');
-            }
-        },
+const messages = ref([]);
+const newMessage = ref('');
+const currentUser = window.App.user;
+const activePeer = ref(false);
+let typingTimer = null;
+const participants = ref([]);
+const expandCurrent = ref(false);
+const replyTo = ref(null);
+const messageInput = ref(null);
+const scrolledUp = ref(false);
+const forceScroll = ref(false);
+const loadingOlder = ref(false);
+const noOlderMessages = ref(false);
+const session = ref(null);
+const roomKeys = ref({});
+const currentVersion = ref(null);
 
-        created() {
-            axios.get('/public/messages').then(response => (this.messages = response.data));
+const channel = computed(() => window.Echo.join('messages'));
 
-            this.channel
-                .here(users => {
-                    this.participants = users;
-                })
-                .joining(user => {
-                    this.participants.push(user);
-                })
-                .leaving(user => {
-                    this.participants.splice(this.participants.indexOf(user), 1);
-                })
-                .listen('PublicRoomMessageCreated', ({message}) => {
-                    this.messages.push(message)
-                })
-                .listenForWhisper('typing', this.flashActivePeer);
-        },
+onMounted(async () => {
+    const container = document.getElementById("room-messages");
+    if (container) container.addEventListener('scroll', handleMessagesScroll);
 
-        updated() {
-            var container = this.$el.querySelector("#room-messages");
-            container.scrollTop = container.scrollHeight;
-        },
+    session.value = await ensureKeys();
 
-        methods: {
-            addMessage() {
-                if (this.newMessage != null && this.newMessage.trim() != '') {
-                    this.activePeer = false;
+    const keyResponse = await axios.get('/public/roomkey');
+    currentVersion.value = keyResponse.data.version;
+    roomKeys.value[currentVersion.value] = keyResponse.data.key;
 
-                    axios.post('/public/messages', {
-                        user_id: this.currentUser.id,
-                        message: this.newMessage
-                    });
+    const historyResponse = await axios.get('/public/roomkey/history');
+    historyResponse.data.forEach(entry => {
+        roomKeys.value[entry.version] = entry.key;
+    });
 
-                    this.newMessage = '';
-                }
+    const response = await axios.get('/public/messages');
+    messages.value = response.data;
+    noOlderMessages.value = response.headers['x-has-more'] !== 'true';
+    scrollMessagesToBottom();
 
-            },
+    channel.value
+        .here(users => {
+            participants.value = users;
+        })
+        .joining(user => {
+            participants.value.push(user);
+        })
+        .leaving(user => {
+            participants.value.splice(participants.value.indexOf(user), 1);
+        })
+        .listen('PublicRoomMessageCreated', ({message}) => {
+            messages.value.push(message)
+            if (message.user_id === currentUser.id) playSend();
+            else playReceive();
+        })
+        .listen('PublicRoomMessageDeleted', ({message_id}) => {
+            messages.value = messages.value.filter(m => m.id !== message_id);
+        })
+        .listenForWhisper('typing', flashActivePeer);
+});
 
-            tagPeers() {
-                this.channel.whisper('typing', {
-                    user: window.App.user
-                });
-            },
+watch(messages, () => {
+    nextTick(() => {
+        if (forceScroll.value || !scrolledUp.value) {
+            scrollMessagesToBottom();
+        }
+        forceScroll.value = false;
+    });
+});
 
-            flashActivePeer(e) {
-                this.activePeer = e;
+onUnmounted(() => {
+    if (typingTimer) clearTimeout(typingTimer);
 
-                if (this.typingTimer) clearTimeout(this.typingTimer);
+    const container = document.getElementById("room-messages");
+    if (container) container.removeEventListener('scroll', handleMessagesScroll);
+});
 
-                this.typingTimer = setTimeout(
-                    () => (this.activePeer = false), 2500
-                );
-            },
+function addMessage() {
+    if (newMessage.value == null || newMessage.value.trim() == '') return;
+    if (!roomKeys.value[currentVersion.value]) return;
+
+    activePeer.value = false;
+
+    const encrypted = encryptPublic(roomKeys.value[currentVersion.value], newMessage.value);
+
+    axios.post('/public/messages', {
+        user_id: currentUser.id,
+        message: encrypted,
+        reply_to_id: replyTo.value ? replyTo.value.id : null
+    });
+
+    forceScroll.value = true;
+    newMessage.value = '';
+    replyTo.value = null;
+}
+
+function messageKey(message) {
+    return roomKeys.value[message.key_version] || roomKeys.value[currentVersion.value];
+}
+
+function messageText(message) {
+    if ('__e2ee_plain' in message) return message.__e2ee_plain;
+    const key = messageKey(message);
+    let text = '';
+    if (key) {
+        try {
+            text = decryptPublic(key, message.message);
+        } catch (e) {
+            text = '';
         }
     }
+    message.__e2ee_plain = text;
+    return text;
+}
+
+function replyText(message) {
+    if (!message.reply_to || !message.reply_to.message) return '';
+    if ('__e2ee_reply_plain' in message) return message.__e2ee_reply_plain;
+    const key = messageKey(message);
+    let text = '';
+    if (key) {
+        try {
+            text = decryptPublic(key, message.reply_to.message);
+        } catch (e) {
+            text = '';
+        }
+    }
+    message.__e2ee_reply_plain = text;
+    return text;
+}
+
+function handleMessagesScroll() {
+    const container = document.getElementById("room-messages");
+    if (!container) return;
+    scrolledUp.value = container.scrollHeight - container.scrollTop - container.clientHeight > 80;
+}
+
+function loadOlderMessages() {
+    if (loadingOlder.value || noOlderMessages.value || messages.value.length === 0) return;
+
+    const container = document.getElementById("room-messages");
+    if (!container) return;
+
+    const cursor = messages.value[0].created_at;
+    const previousScrollHeight = container.scrollHeight;
+    const previousScrollTop = container.scrollTop;
+    loadingOlder.value = true;
+
+    axios.get('/public/messages', {
+        params: { before: cursor }
+    }).then(response => {
+        const older = response.data;
+        noOlderMessages.value = response.headers['x-has-more'] !== 'true';
+        if (older.length === 0) return;
+        messages.value = [...older, ...messages.value];
+        nextTick(() => {
+            container.scrollTop = container.scrollHeight - previousScrollHeight + previousScrollTop;
+        });
+    }).finally(() => {
+        loadingOlder.value = false;
+    });
+}
+
+function scrollMessagesToBottom() {
+    const container = document.getElementById("room-messages");
+    if (!container) return;
+    container.scrollTop = container.scrollHeight;
+}
+
+function setReply(message) {
+    replyTo.value = message;
+    newMessage.value = '';
+    if (messageInput.value) messageInput.value.focus();
+}
+
+function tagPeers() {
+    channel.value.whisper('typing', {
+        user: window.App.user
+    });
+}
+
+function deleteMessage(message) {
+    axios.delete('/public/messages/' + message.id)
+        .then(() => {
+            messages.value = messages.value.filter(m => m.id !== message.id);
+        });
+}
+
+function scrollToMessage(id) {
+    const container = document.getElementById('room-messages');
+    const el = document.getElementById('message-' + id);
+    if (!container || !el) return;
+
+    container.scrollTo({
+        top: el.offsetTop - container.clientHeight / 2 + el.clientHeight / 2,
+        behavior: 'smooth'
+    });
+
+    el.classList.add('flash-highlight');
+    setTimeout(() => el.classList.remove('flash-highlight'), 1400);
+}
+
+function flashActivePeer(e) {
+    activePeer.value = e;
+
+    if (e.user.id !== currentUser.id) playTyping();
+
+    if (typingTimer) clearTimeout(typingTimer);
+
+    typingTimer = setTimeout(
+        () => (activePeer.value = false), 2500
+    );
+}
 </script>
 
 <style scoped>
+.flash-highlight {
+    border-radius: 0.75rem;
+    animation: flashHighlight 1.4s ease-out;
+}
 
+@keyframes flashHighlight {
+    0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.55); }
+    100% { box-shadow: 0 0 0 12px rgba(79, 70, 229, 0); }
+}
 </style>

@@ -13,14 +13,22 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('messages', function ($user) {
+$userPayload = fn ($user) => [
+    'id' => $user->id,
+    'name' => $user->name,
+    'avatar' => $user->avatar,
+];
+
+Broadcast::channel('messages', function ($user) use ($userPayload) {
 //    return (int) $user->id === (int) $id;
-    return ['user' => $user];
+    return ['user' => $userPayload($user)];
 });
 
-Broadcast::channel('messages.{roomId}', function ($user, $id) {
+Broadcast::channel('messages.{roomId}', function ($user, $id) use ($userPayload) {
 //    return (int) $user->id === (int) $id;
-    if($user->accessiblePrivateRooms()->contains($id)){
-        return ['user' => $user];
+    if ($user->is_admin || $user->accessiblePrivateRooms()->contains('id', $id)) {
+        return ['user' => $userPayload($user)];
     }
+
+    abort(403, 'You are not allowed to access this room.');
 });

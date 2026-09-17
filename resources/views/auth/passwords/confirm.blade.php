@@ -1,50 +1,44 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mx-auto">
-        <div class="flex flex-wrap justify-center">
-            <div class="w-full max-w-sm">
-                <div class="flex flex-col break-words bg-white border-2 rounded shadow-md">
+    <div class="flex items-center justify-center w-full px-4 py-12">
+        <div class="w-full max-w-md">
+            <div class="card overflow-hidden">
+                <div class="card-header">
+                    <h2 class="text-center text-xl font-semibold text-white">{{ __('Confirm Password') }}</h2>
+                </div>
 
-                    <div class="font-semibold bg-gray-200 text-gray-700 py-3 px-6 mb-0">
-                        {{ __('Confirm Password') }}
+                <form class="p-8" method="POST" action="{{ route('password.confirm') }}">
+                    @csrf
+
+                    <p class="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                        {{ __('Please confirm your password before continuing.') }}
+                    </p>
+
+                    <div class="my-6">
+                        <label for="password" class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
+                            {{ __('Password') }}:
+                        </label>
+
+                        <input id="password" type="password" class="input @error('password') border-red-500 focus:ring-red-500/30 @enderror" name="password" required autocomplete="new-password">
+
+                        @error('password')
+                            <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    <form class="w-full p-6" method="POST" action="{{ route('password.confirm') }}">
-                        @csrf
+                    <div class="flex flex-wrap items-center gap-4">
+                        <button type="submit" class="btn-primary w-full sm:w-auto px-6">
+                            {{ __('Confirm Password') }}
+                        </button>
 
-                        <p class="leading-normal">
-                            {{ __('Please confirm your password before continuing.') }}
-                        </p>
-
-                        <div class="flex flex-wrap my-6">
-                            <label for="password" class="block text-gray-700 text-sm font-bold mb-2">
-                                {{ __('Password') }}:
-                            </label>
-
-                            <input id="password" type="password" class="form-input w-full @error('password') border-red-500 @enderror" name="password" required autocomplete="new-password">
-
-                            @error('password')
-                                <p class="text-red-500 text-xs italic mt-4">
-                                    {{ $message }}
-                                </p>
-                            @enderror
-                        </div>
-
-                        <div class="flex flex-wrap items-center">
-                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-gray-100 font-bold  py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                {{ __('Confirm Password') }}
-                            </button>
-
-                            @if (Route::has('password.request'))
-                                <a class="text-sm text-blue-500 hover:text-blue-700 whitespace-no-wrap no-underline ml-auto" href="{{ route('password.request') }}">
-                                    {{ __('Forgot Your Password?') }}
-                                </a>
-                            @endif
-                        </div>
-                    </form>
-
-                </div>
+                        @if (Route::has('password.request'))
+                            <a class="text-sm text-indigo-600 hover:text-indigo-800 font-medium sm:ml-auto" href="{{ route('password.request') }}">
+                                {{ __('Forgot Your Password?') }}
+                            </a>
+                        @endif
+                    </div>
+                </form>
             </div>
         </div>
     </div>

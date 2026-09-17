@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\PrivateRoom;
-use App\PrivateRoomParticipant;
-use App\User;
+use App\Models\PrivateRoom;
+use App\Models\PrivateRoomParticipant;
+use App\Models\User;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class PrivateRoomController extends Controller
@@ -15,7 +16,7 @@ class PrivateRoomController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Factory|View|\Illuminate\View\View
      */
     public function index()
     {
@@ -69,6 +70,12 @@ class PrivateRoomController extends Controller
             'email' => 'required|string|email|exists:users,email',
         ]);
 
+        $room = PrivateRoom::findOrFail($data['private_room_id']);
+
+        if (!auth()->user()->is_admin && auth()->id() !== $room->owner_id) {
+            abort(403, 'Only the room owner can add participants.');
+        }
+
         $user = User::where('email', $data['email'])->first();
 
         $userFound = PrivateRoomParticipant::where('private_room_id', $data['private_room_id'])->where('user_id', $user->id)->first();
@@ -76,17 +83,21 @@ class PrivateRoomController extends Controller
             throw ValidationException::withMessages(['email' => 'A user with this email already in this room']);
         }
 
-        $room = PrivateRoom::where('id', $data['private_room_id'])->first();
         $room->participants()->attach($user);
 
-        return $user;
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+            'avatar' => $user->avatar,
+            'active' => false,
+        ];
     }
 
     /**
      * Display the specified resource.
      *
-     * @param PrivateRoom $privateRoom
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @param \App\Models\PrivateRoom $privateRoom
+     * @return Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(PrivateRoom $privateRoom)

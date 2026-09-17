@@ -11,11 +11,11 @@ class CreatePublicRoomsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('public_room_messages', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('user_id');
             $table->text('message');
             $table->timestamps();
 
@@ -28,7 +28,7 @@ class CreatePublicRoomsTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('public_room_messages');
     }
