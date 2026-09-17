@@ -12,8 +12,8 @@
         "cviebrock/eloquent-sluggable": "^13.0",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^13.20",
-        "laravel/tinker": "^3.0",
-        "pusher/pusher-php-server": "^7.2"
+        "laravel/reverb": "^1.11",
+        "laravel/tinker": "^3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
