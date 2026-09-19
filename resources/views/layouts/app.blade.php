@@ -84,7 +84,7 @@
                                 <template v-slot:trigger>
                                     <div class="flex justify-end items-center">
                                         <img class="w-8 h-8 rounded-full ring-2 ring-indigo-200 shadow"
-                                             src="https://ui-avatars.com/api/?name={{urlencode(Auth::user()->name)}}&amp;background=random&amp;color=fff"
+                                             src="{{Auth::user()->avatar}}"
                                              alt="avatar">
                                         <span class="hidden sm:inline text-slate-700 dark:text-slate-200 text-sm font-medium pr-4 ml-2">
                                         {{ Auth::user()->name }}
